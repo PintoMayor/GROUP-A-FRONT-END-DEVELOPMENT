@@ -1,4 +1,4 @@
-` # CivicPulse
+ # CivicPulse
 
 **Community Problem Reporting and Tracking Website**
 
@@ -65,24 +65,6 @@ Many community problems are reported informally, which makes it hard for residen
 ## Expected Outcome
 
 A functional website prototype that demonstrates how web technologies can be used to address community problems. The project shows an understanding of HTML, CSS, Flexbox, JavaScript and DOM manipulation, and provides a foundation for future improvements.
-
-## Getting Started
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/your-repo-name.git
-   ```
-2. Open the project folder:
-   ```bash
-   cd your-repo-name
-   ```
-3. Open `index.html` in your browser (or use the Live Server extension in VS Code).
-
-## Future Improvements
-
-- Connect the app to Supabase for persistent online storage
-- Add administrator login and authentication
-- Deploy the site on Netlify with a public link
 
 ## Author
 
