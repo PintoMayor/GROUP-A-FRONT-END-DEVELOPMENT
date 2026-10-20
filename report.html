@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Report a Problem — CivicPulse</title>
+<meta name="description" content="Report a community problem — a bad road, a blocked drain, an overflowing bin — to CivicPulse and get a public response from the department responsible." />
+<meta name="author" content="Pinmo Paul" />
+<meta name="theme-color" content="#008751" />
+
+<link rel="stylesheet" href="assets/css/base.css" />
+<link rel="stylesheet" href="assets/css/animations.css" />
+<link rel="stylesheet" href="assets/css/app.css" />
+<link rel="stylesheet" href="assets/css/pages.css" />
+<link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAZUlEQVR42u3XSw4AEAxFUVu0KstmAUJKf0+8Jsb3zLSlPDWtdtFLibpgtHEVwip+hbCOHyG84iKEd3yLiIovEX8DouMTggACCCAgHcC/AAKQvpBArGQQSynEWg5xmECcZhDHqfMMh1NRyGzSnHYAAAAASUVORK5CYII=" />
+
+<script>
+  // We hide the page content with css until the animation script is
+  // ready to show it again. If that script does not load, we take the
+  // class off after 3 seconds so the page is never left blank.
+  document.documentElement.classList.add("cp-motion");
+  setTimeout(function () {
+    if (!window.cpReady) {
+      document.documentElement.classList.remove("cp-motion");
+    }
+  }, 3000);
+</script>
+</head>
+
+<body data-cursor="on">
+<div class="cp-progress" data-progress aria-hidden="true"></div>
+
+<!-- HEADER -->
+<header class="header header--over-dark" data-header>
+  <nav class="container nav" aria-label="Main navigation">
+    <a href="index.html" class="nav__brand">
+      <span class="nav__mark" aria-hidden="true">
+        <span class="ico ico--home ico--sm"></span>
+      </span>
+      <span class="nav__brand-text">Civic<span>Pulse</span></span>
+    </a>
+
+    <button class="nav__toggle" data-nav-toggle aria-label="Toggle menu" aria-expanded="false">
+      <span class="ico ico--menu"></span>
+    </button>
+
+    <div class="nav__links" id="nav-links" data-nav-links>
+      <a href="index.html#how"        class="nav__link" data-nav-link>How it works</a>
+      <a href="index.html#categories" class="nav__link" data-nav-link>Categories</a>
+      <a href="index.html#reports"    class="nav__link" data-nav-link>Live reports</a>
+      <a href="track.html"            class="nav__link" data-nav-link>Track a report</a>
+      <a href="report.html" class="btn btn--primary btn--sm nav__cta" data-ripple data-magnetic="0.18">
+        Report a problem
+        <span class="ico ico--arrow ico--sm"></span>
+      </a>
+    </div>
+  </nav>
+</header>
+
+<main>
+
+<!-- PAGE HEAD -->
+<section class="page-head cp-grain">
+  <div class="cp-aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+  <div class="container page-head__inner">
+    <div data-reveal="up">
+      <span class="eyebrow"><span class="dot"></span> New report</span>
+      <h1>Tell us <span class="text-gradient">what needs fixing</span> in your area</h1>
+      <p>It takes about a minute. The more detail you give, the faster the right department can act on it.</p>
+    </div>
+    <div class="page-head__aside" data-reveal="up" data-delay="2">
+      <div class="mini-stat"><b>1 min</b><span>to submit</span></div>
+      <div class="mini-stat"><b>24 h</b><span>to first review</span></div>
+      <div class="mini-stat"><b>6.4 d</b><span>avg. fix time</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- THE FORM -->
+<section class="section section--tight" id="form-section">
+  <div class="container">
+    <div class="form-layout">
+
+      <!-- ---------- the form itself ---------- -->
+      <div class="form-card" id="form-card" data-reveal="up">
+        <h2 class="form-card__title">Report details</h2>
+        <p class="muted" style="font-size:var(--fs-sm)">Fields marked <span style="color:#C0392B">*</span> are required.</p>
+
+        <form id="report-form" novalidate>
+
+          <div class="form-grid">
+
+            <!-- CATEGORY -->
+            <div class="field" data-field="category">
+              <label class="field__label" for="r-category">What kind of problem is it? <span style="color:#C0392B">*</span></label>
+              <select class="select" id="r-category" name="category">
+                <option value="">Choose a category…</option>
+                <option value="Roads">Roads — potholes, bad surfaces</option>
+                <option value="Drainage">Drainage — blocked or broken drains</option>
+                <option value="Waste">Waste — refuse not collected</option>
+                <option value="Streetlights">Streetlights — dark or broken</option>
+                <option value="Safety">Safety — open manholes, unguarded pits</option>
+                <option value="Facilities">Facilities — taps, toilets, shelters</option>
+              </select>
+              <p class="field__error">Please choose a category.</p>
+            </div>
+
+            <!-- TITLE -->
+            <div class="field" data-field="title">
+              <label class="field__label" for="r-title">Short title <span style="color:#C0392B">*</span></label>
+              <input class="input" type="text" id="r-title" name="title" placeholder="e.g. Deep pothole on the link road" maxlength="80" />
+              <p class="field__error">Please give the report a short title (at least 8 characters).</p>
+            </div>
+
+            <!-- LOCATION -->
+            <div class="field" data-field="location">
+              <label class="field__label" for="r-location">Where is it? <span style="color:#C0392B">*</span></label>
+              <input class="input" type="text" id="r-location" name="location" placeholder="Street, area and town" maxlength="90" />
+              <p class="field__error">Please tell us the location.</p>
+            </div>
+
+            <!-- LANDMARK -->
+            <div class="field" data-field="landmark">
+              <label class="field__label" for="r-landmark">Nearest landmark</label>
+              <input class="input" type="text" id="r-landmark" name="landmark" placeholder="e.g. Opposite the primary school" maxlength="90" />
+              <p class="field__hint muted" style="font-size:var(--fs-xs);margin-top:6px">Optional, but it helps the team find the spot.</p>
+            </div>
+
+            <!-- DESCRIPTION -->
+            <div class="field field--full" data-field="description">
+              <label class="field__label" for="r-description">What is happening? <span style="color:#C0392B">*</span></label>
+              <textarea class="textarea" id="r-description" name="description" rows="5" placeholder="Describe the problem, how long it has been there, and how it affects people." maxlength="600"></textarea>
+              <p class="field__error">Please describe the problem (at least 20 characters).</p>
+              <p class="muted" style="font-size:var(--fs-xs);margin-top:6px"><span id="desc-count">0</span> / 600 characters</p>
+            </div>
+
+            <!-- PHOTO -->
+            <div class="field field--full" data-field="photo">
+              <label class="field__label" for="r-photo">Add a photo</label>
+              <label class="file-drop" id="file-drop">
+                <input type="file" id="r-photo" name="photo" accept="image/*" />
+                <span class="file-drop__icon" aria-hidden="true"><span class="ico ico--photo"></span></span>
+                <span class="file-drop__text">
+                  <b>Tap to choose a photo</b>
+                  <span id="photo-name">No file chosen yet</span>
+                </span>
+              </label>
+            </div>
+
+            <!-- CONTACT -->
+            <div class="field field--full" data-field="contact">
+              <label class="field__label" for="r-contact">Your phone or email</label>
+              <input class="input" type="text" id="r-contact" name="contact" placeholder="We use this to tell you when there is an update" maxlength="90" />
+              <p class="field__hint muted" style="font-size:var(--fs-xs);margin-top:6px">Optional. Your contact details are never shown publicly.</p>
+            </div>
+
+          </div>
+
+          <div style="display:flex;flex-wrap:wrap;gap:var(--sp-3);align-items:center;margin-top:var(--sp-5)">
+            <button type="submit" class="btn btn--primary btn--lg" data-ripple>
+              <span class="ico ico--pen ico--sm"></span>
+              Submit report
+            </button>
+            <button type="reset" class="btn btn--outline btn--lg">Clear form</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ---------- the helpful side panel ---------- -->
+      <aside>
+        <div class="aside-card" data-reveal="up" data-delay="2">
+          <h3>Where will this go?</h3>
+          <ul class="aside-list">
+            <li>
+              <span class="ico ico--check ico--sm" style="color:var(--ng-green-600)"></span>
+              <span><b>Straight to the ward office</b>Reports are grouped by area and routed to the right department.</span>
+            </li>
+            <li>
+              <span class="ico ico--check ico--sm" style="color:var(--ng-green-600)"></span>
+              <span><b>Onto the public feed</b>Your report is posted publicly with a reference code so others can support it.</span>
+            </li>
+            <li>
+              <span class="ico ico--check ico--sm" style="color:var(--ng-green-600)"></span>
+              <span><b>Tracked to the end</b>Every status change is written to your report's history.</span>
+            </li>
+          </ul>
+
+          <div class="pin-preview" id="pin-preview">
+            <span class="pin-preview__pin" aria-hidden="true"></span>
+            <span>
+              <b id="pin-location">Your location will appear here</b>
+              <span id="pin-landmark">Add a street or a landmark above</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="aside-card" data-reveal="up" data-delay="3">
+          <h3>How fast is each type fixed?</h3>
+          <ul class="aside-list">
+            <li><span class="ico ico--water ico--sm" style="color:var(--ng-green-600)"></span><span><b>Drainage — 4 days</b>Our fastest-moving category.</span></li>
+            <li><span class="ico ico--road ico--sm" style="color:var(--ng-green-600)"></span><span><b>Roads — 9 days</b>Depends on the weather season.</span></li>
+            <li><span class="ico ico--bin ico--sm" style="color:var(--ng-green-600)"></span><span><b>Waste — 3 days</b>Contractor routes run every week.</span></li>
+            <li><span class="ico ico--lamp ico--sm" style="color:var(--ng-green-600)"></span><span><b>Streetlights — 11 days</b>Power company visits are weekly.</span></li>
+          </ul>
+        </div>
+
+        <div class="aside-card" data-reveal="up" data-delay="4">
+          <h3>Already reported it?</h3>
+          <p class="muted" style="font-size:var(--fs-sm)">Search the live feed first — if the problem is there, add your vote instead of creating a duplicate.</p>
+          <a href="index.html#reports" class="btn btn--outline btn--sm" style="margin-top:var(--sp-3)" data-ripple>
+            <span class="ico ico--search ico--sm"></span>
+            Search live reports
+          </a>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</section>
+
+<!-- SUCCESS PANEL (hidden until the form is sent) -->
+<section class="section section--tight" id="success-section" hidden>
+  <div class="container">
+    <div class="success-card cp-grain" data-reveal="zoom">
+      <div class="cp-aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+      <span class="ico ico--check ico--lg" style="color:var(--ng-green-300)"></span>
+      <h2 style="margin-top:var(--sp-4)">Your report is live</h2>
+      <p>It is now on the public feed and in the ward office queue. Keep this reference code — you can use it to track every update.</p>
+
+      <div class="ref-code" id="ref-code">CP-0000</div>
+
+      <div class="success-card__actions">
+        <a href="#" class="btn btn--gold btn--lg" id="success-track" data-ripple>
+          <span class="ico ico--chart ico--sm"></span>
+          Track this report
+        </a>
+        <a href="index.html#reports" class="btn btn--light btn--lg" data-ripple>See it on the live feed</a>
+        <button type="button" class="btn btn--outline btn--lg" id="new-report" style="color:#fff;border-color:rgba(255,255,255,.45)">Report another problem</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer cp-grain">
+  <div class="container">
+    <div class="footer__grid">
+      <div style="max-width:320px">
+        <div class="nav__brand" style="margin-bottom:16px">
+          <span class="nav__mark" aria-hidden="true"><span class="ico ico--home ico--sm"></span></span>
+          <span class="nav__brand-text" style="color:#fff">Civic<span style="color:var(--ng-green-300)">Pulse</span></span>
+        </div>
+        <p style="font-size:var(--fs-sm)">A community problem reporting and tracking platform for Nigerian neighbourhoods. Report it, follow it, see it fixed.</p>
+      </div>
+
+      <div>
+        <h4>Platform</h4>
+        <ul style="display:grid;gap:10px;font-size:var(--fs-sm)">
+          <li><a href="index.html#how">How it works</a></li>
+          <li><a href="index.html#categories">Categories</a></li>
+          <li><a href="index.html#reports">Live reports</a></li>
+          <li><a href="index.html#impact">Impact</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>For residents</h4>
+        <ul style="display:grid;gap:10px;font-size:var(--fs-sm)">
+          <li><a href="report.html">Report a problem</a></li>
+          <li><a href="track.html">Track a report</a></li>
+          <li><a href="#">Community guidelines</a></li>
+          <li><a href="#">Help centre</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>For officials</h4>
+        <ul style="display:grid;gap:10px;font-size:var(--fs-sm)">
+          <li><a href="admin.html">Admin dashboard</a></li>
+          <li><a href="admin.html">Review queue</a></li>
+          <li><a href="#">Service targets</a></li>
+          <li><a href="#">Data export</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <p>© 2026 CivicPulse. Project by <strong style="color:#fff">Pinmo Paul</strong> — Group A, Front End Development Track.</p>
+      <p>Built with HTML, CSS, Flexbox &amp; vanilla JavaScript.</p>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"><span class="ico ico--check ico--sm"></span><span id="toast-text">Done</span></div>
+
+<script src="assets/js/animations.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages.js"></script>
+</body>
+</html>

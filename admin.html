@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Admin Dashboard — CivicPulse</title>
+<meta name="description" content="CivicPulse administrative dashboard — review incoming community reports, update their status and post official responses." />
+<meta name="author" content="Pinmo Paul" />
+<meta name="theme-color" content="#008751" />
+
+<link rel="stylesheet" href="assets/css/base.css" />
+<link rel="stylesheet" href="assets/css/animations.css" />
+<link rel="stylesheet" href="assets/css/app.css" />
+<link rel="stylesheet" href="assets/css/pages.css" />
+<link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAZUlEQVR42u3XSw4AEAxFUVu0KstmAUJKf0+8Jsb3zLSlPDWtdtFLibpgtHEVwip+hbCOHyG84iKEd3yLiIovEX8DouMTggACCCAgHcC/AAKQvpBArGQQSynEWg5xmECcZhDHqfMMh1NRyGzSnHYAAAAASUVJKYII=" />
+
+<script>
+  // We hide the page content with css until the animation script is
+  // ready to show it again. If that script does not load, we take the
+  // class off after 3 seconds so the page is never left blank.
+  document.documentElement.classList.add("cp-motion");
+  setTimeout(function () {
+    if (!window.cpReady) {
+      document.documentElement.classList.remove("cp-motion");
+    }
+  }, 3000);
+</script>
+</head>
+
+<body class="admin" data-cursor="on">
+
+<!-- HEADER -->
+<header class="header" data-header>
+  <nav class="container nav" aria-label="Main navigation">
+    <a href="index.html" class="nav__brand">
+      <span class="nav__mark" aria-hidden="true">
+        <span class="ico ico--home ico--sm"></span>
+      </span>
+      <span class="nav__brand-text">Civic<span>Pulse</span></span>
+    </a>
+
+    <button class="nav__toggle" data-nav-toggle aria-label="Toggle menu" aria-expanded="false">
+      <span class="ico ico--menu"></span>
+    </button>
+
+    <div class="nav__links" id="nav-links" data-nav-links>
+      <a href="index.html#reports" class="nav__link" data-nav-link>Public feed</a>
+      <a href="index.html#impact"  class="nav__link" data-nav-link>Impact</a>
+      <a href="track.html"         class="nav__link" data-nav-link>Track a report</a>
+      <a href="report.html" class="btn btn--primary btn--sm nav__cta" data-ripple data-magnetic="0.18">
+        Report a problem
+        <span class="ico ico--arrow ico--sm"></span>
+      </a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section class="section section--tight" style="padding-top:calc(var(--header-h) + var(--sp-6))">
+    <div class="container">
+
+      <!-- ---------- dashboard title ---------- -->
+      <div class="section-head" data-reveal="up" style="margin-bottom:var(--sp-5)">
+        <span class="eyebrow"><span class="dot"></span> Administrative dashboard</span>
+        <h2 style="margin-top:12px">Good afternoon, <span class="text-gradient">Works Department</span></h2>
+        <p class="lead">Review the queue, update the status of each report and post a response the resident can see.</p>
+      </div>
+
+      <!-- ---------- the stat strip ---------- -->
+      <div class="admin-stats" id="admin-stats" data-stagger="80">
+        <div class="admin-stat" data-reveal="up"><b id="stat-new">0</b><span>New</span></div>
+        <div class="admin-stat admin-stat--review" data-reveal="up"><b id="stat-review">0</b><span>In review</span></div>
+        <div class="admin-stat admin-stat--progress" data-reveal="up"><b id="stat-progress">0</b><span>In progress</span></div>
+        <div class="admin-stat admin-stat--fixed" data-reveal="up"><b id="stat-fixed">0</b><span>Resolved</span></div>
+        <div class="admin-stat" data-reveal="up"><b id="stat-total">0</b><span>Total</span></div>
+      </div>
+
+      <!-- ---------- queue + detail ---------- -->
+      <div class="admin__wrap">
+
+        <!-- ---------- the review queue ---------- -->
+        <div class="queue" data-reveal="left">
+          <div class="queue__head">
+            <h2>Review queue</h2>
+            <span class="pill pill--glass" id="queue-count">0</span>
+          </div>
+
+          <div style="padding:var(--sp-3) var(--sp-4);border-bottom:1px solid var(--line)">
+            <input class="input" type="search" id="admin-search" placeholder="Search the queue…" aria-label="Search the review queue" />
+            <div class="filters" id="admin-filters" style="margin-top:var(--sp-3);flex-wrap:wrap">
+              <button class="filter is-active" data-filter="all">All</button>
+              <button class="filter" data-filter="New">New</button>
+              <button class="filter" data-filter="In Review">Review</button>
+              <button class="filter" data-filter="In Progress">Progress</button>
+              <button class="filter" data-filter="Resolved">Resolved</button>
+            </div>
+          </div>
+
+          <ul class="queue__list" id="admin-queue"></ul>
+        </div>
+
+        <!-- ---------- the detail panel ---------- -->
+        <div class="admin__panel" id="admin-panel" data-reveal="right">
+
+          <div id="admin-empty">
+            <span class="ico ico--chart ico--lg" style="color:var(--ink-300)"></span>
+            <h2 style="margin-top:var(--sp-3)">Choose a report to review</h2>
+            <p class="muted" style="margin-top:8px">Pick any report from the queue on the left. You will be able to change its status and post a response.</p>
+          </div>
+
+          <div id="admin-detail" hidden>
+            <div class="track-card__top">
+              <div>
+                <span class="report__id" id="d-id">CP-0000</span>
+                <h2 id="d-title">Report title</h2>
+              </div>
+              <span class="cp-status cp-status--new" id="d-status"><i class="cp-status__dot"></i>New</span>
+            </div>
+
+            <div class="admin__detail-meta">
+              <span><span class="ico ico--pin ico--sm" style="color:var(--ink-300)"></span> <span id="d-location">Location</span></span>
+              <span><span class="ico ico--clock ico--sm" style="color:var(--ink-300)"></span> <span id="d-time">Just now</span></span>
+              <span><span class="ico ico--users ico--sm" style="color:var(--ink-300)"></span> <span id="d-category">Category</span></span>
+              <span><span class="ico ico--thumb ico--sm" style="color:var(--ink-300)"></span> <span id="d-votes">0</span> supporters</span>
+            </div>
+
+            <div class="admin__desc" id="d-description">Description</div>
+
+            <!-- ---------- change the status ---------- -->
+            <div class="admin__block">
+              <h3>Update the status</h3>
+              <div class="status-actions" id="status-actions">
+                <button class="status-btn" data-status="New">New</button>
+                <button class="status-btn" data-status="In Review">In review</button>
+                <button class="status-btn" data-status="In Progress">In progress</button>
+                <button class="status-btn" data-status="Resolved">Resolved</button>
+              </div>
+              <p class="reply-hint" style="margin-top:var(--sp-3)">Choosing a new status adds an entry to the report history that the resident can see.</p>
+            </div>
+
+            <!-- ---------- post a response ---------- -->
+            <div class="admin__block">
+              <h3>Post a response</h3>
+              <div class="reply-box">
+                <textarea class="textarea" id="d-reply" placeholder="Write an update the resident will see on their tracking page…"></textarea>
+                <div style="display:flex;flex-wrap:wrap;gap:var(--sp-3);align-items:center">
+                  <button class="btn btn--primary" id="d-reply-button" data-ripple>
+                    <span class="ico ico--arrow ico--sm"></span>
+                    Publish response
+                  </button>
+                  <span class="reply-hint">Published to the public feed and the tracking page.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ---------- the history ---------- -->
+            <div class="admin__block">
+              <h3>Activity trail</h3>
+              <ul class="timeline" id="d-timeline"></ul>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer cp-grain">
+  <div class="container">
+    <div class="footer__bottom" style="padding-top:0;margin-top:0">
+      <p>© 2026 CivicPulse. Project by <strong style="color:#fff">Pinmo Paul</strong> — Group A, Front End Development Track.</p>
+      <p>Built with HTML, CSS, Flexbox &amp; vanilla JavaScript.</p>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"><span class="ico ico--check ico--sm"></span><span id="toast-text">Done</span></div>
+
+<script src="assets/js/animations.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages.js"></script>
+</body>
+</html>

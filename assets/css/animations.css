@@ -1,0 +1,602 @@
+/* CivicPulse - animations.css
+   All the moving parts of the site.
+
+   Everything here is plain CSS: @keyframes, transition, transform, opacity
+   and gradients. No svg, no canvas, no animation library.
+
+   How the scroll reveal works:
+   1. The page starts with <html class="cp-motion"> so nothing flashes.
+   2. An element with data-reveal is hidden by CSS.
+   3. When it scrolls near the screen, JavaScript adds the class is-visible
+      and the transition moves it into place.                    */
+
+
+/* ---------------------------------------------------------------
+   1. SCROLL REVEAL
+   --------------------------------------------------------------- */
+
+/* every reveal fades in when is-visible is added */
+[data-reveal] {
+  transition: opacity 0.7s ease, transform 0.7s ease, filter 0.7s ease;
+}
+
+/* the hidden "before" position for each type of reveal */
+.cp-motion [data-reveal] { opacity: 0; }
+.cp-motion [data-reveal="fade"]     { }
+.cp-motion [data-reveal="up"]       { transform: translateY(40px); }
+.cp-motion [data-reveal="down"]     { transform: translateY(-40px); }
+.cp-motion [data-reveal="left"]     { transform: translateX(-56px); }
+.cp-motion [data-reveal="right"]    { transform: translateX(56px); }
+.cp-motion [data-reveal="zoom"]     { transform: scale(0.88); }
+.cp-motion [data-reveal="zoom-far"] { transform: scale(0.66); }
+.cp-motion [data-reveal="blur"]     { transform: translateY(20px); filter: blur(14px); }
+.cp-motion [data-reveal="blur-up"]  { transform: translateY(32px); filter: blur(10px); }
+.cp-motion [data-reveal="flip"]     { transform: rotate(-7deg) scale(0.92); }
+.cp-motion [data-reveal="tilt"]     { transform: rotate(4deg) translateY(28px); }
+.cp-motion [data-reveal="grow"]     { transform: scale(0.25); }
+.cp-motion [data-reveal="rise"]     { transform: translateY(90px) scale(0.95); }
+
+/* the visible "after" position */
+.cp-motion [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* on a small screen a sideways reveal would go off the edge,
+   so we bring it in from the bottom instead */
+@media (max-width: 768px) {
+  .cp-motion [data-reveal="left"]  { transform: translateY(34px); }
+  .cp-motion [data-reveal="right"] { transform: translateY(34px); }
+}
+
+/* the sweep reveal - a green and gold curtain slides away */
+.cp-motion [data-reveal="sweep"] { position: relative; overflow: hidden; }
+.cp-motion [data-reveal="sweep"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, var(--ng-green-500), var(--gold-400));
+  transform-origin: bottom;
+  transition: transform 0.9s ease;
+}
+.cp-motion [data-reveal="sweep"].is-visible::after { transform: scaleY(0); }
+
+/* small delay steps - data-delay="1" up to "6" */
+[data-delay="1"] { transition-delay: 90ms;  animation-delay: 90ms; }
+[data-delay="2"] { transition-delay: 180ms; animation-delay: 180ms; }
+[data-delay="3"] { transition-delay: 270ms; animation-delay: 270ms; }
+[data-delay="4"] { transition-delay: 360ms; animation-delay: 360ms; }
+[data-delay="5"] { transition-delay: 450ms; animation-delay: 450ms; }
+[data-delay="6"] { transition-delay: 540ms; animation-delay: 540ms; }
+
+
+/* ---------------------------------------------------------------
+   2. KEYFRAMES
+   These are the little movements that repeat forever.
+   --------------------------------------------------------------- */
+
+@keyframes cp-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-14px); }
+}
+@keyframes cp-float-sm {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+@keyframes cp-bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-9px) rotate(3deg); }
+}
+@keyframes cp-spin { to { transform: rotate(360deg); } }
+@keyframes cp-spin-slow { to { transform: rotate(-360deg); } }
+
+@keyframes cp-pulse-ring {
+  0%   { transform: scale(0.5); opacity: 0.8; }
+  70%  { opacity: 0.1; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+@keyframes cp-pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.4; transform: scale(0.8); }
+}
+@keyframes cp-breathe {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 135, 81, 0.4); }
+  50%      { box-shadow: 0 0 0 16px rgba(0, 135, 81, 0); }
+}
+@keyframes cp-bounce-in {
+  0%   { opacity: 0; transform: scale(0.7); }
+  60%  { opacity: 1; transform: scale(1.06); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes cp-pop {
+  0%   { transform: scale(1); }
+  45%  { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+@keyframes cp-shake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-7px); }
+  40%      { transform: translateX(6px); }
+  60%      { transform: translateX(-4px); }
+  80%      { transform: translateX(3px); }
+}
+@keyframes cp-shimmer {
+  0%   { background-position: -220% 0; }
+  100% { background-position: 220% 0; }
+}
+@keyframes cp-gradient-pan {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes cp-text-pan {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+@keyframes cp-blob {
+  0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  33%      { border-radius: 30% 70% 60% 40% / 40% 60% 40% 60%; }
+  66%      { border-radius: 50% 50% 40% 60% / 60% 40% 60% 40%; }
+}
+@keyframes cp-aurora {
+  0%   { transform: translate3d(-8%, -6%, 0) scale(1); }
+  33%  { transform: translate3d(10%, 4%, 0) scale(1.2); }
+  66%  { transform: translate3d(-4%, 10%, 0) scale(0.92); }
+  100% { transform: translate3d(-8%, -6%, 0) scale(1); }
+}
+@keyframes cp-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes cp-wave-slide {
+  from { transform: translateX(0); }
+  to   { transform: translateX(45%); }
+}
+@keyframes cp-caret { 0%, 45% { opacity: 1; } 55%, 100% { opacity: 0; } }
+@keyframes cp-typing {
+  0%, 100% { opacity: 0.25; transform: translateY(0); }
+  50%      { opacity: 1; transform: translateY(-4px); }
+}
+
+
+/* ---------------------------------------------------------------
+   3. BACKGROUND LAYERS
+   --------------------------------------------------------------- */
+
+/* the soft green and gold blobs that drift behind the hero */
+.cp-aurora {
+  position: absolute;
+  inset: -20%;
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(60px);
+  opacity: 0.55;
+}
+.cp-aurora span {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  animation: cp-aurora 18s ease-in-out infinite;
+}
+.cp-aurora span:nth-child(1) {
+  width: 46%; height: 46%; left: 4%; top: 8%;
+  background: radial-gradient(circle at 30% 30%, #0aa465, transparent 70%);
+}
+.cp-aurora span:nth-child(2) {
+  width: 42%; height: 42%; right: 6%; top: 2%;
+  background: radial-gradient(circle at 60% 40%, #a67200, transparent 70%);
+  animation-delay: -6s;
+  animation-duration: 22s;
+}
+.cp-aurora span:nth-child(3) {
+  width: 54%; height: 54%; left: 26%; bottom: 0%;
+  background: radial-gradient(circle at 50% 60%, #00794a, transparent 72%);
+  animation-delay: -12s;
+  animation-duration: 26s;
+}
+.cp-aurora span:nth-child(4) {
+  width: 30%; height: 30%; left: 48%; top: 28%;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.7), transparent 68%);
+  animation-delay: -3s;
+  animation-duration: 17s;
+}
+
+/* a big gradient that slowly changes colour */
+.cp-gradient-flow {
+  background: linear-gradient(
+    115deg,
+    var(--ng-green-900) 0%,
+    var(--ng-green-800) 28%,
+    var(--ng-green-600) 56%,
+    var(--ng-green-400) 78%,
+    var(--gold-300) 100%
+  );
+  background-size: 260% 260%;
+  animation: cp-gradient-pan 16s ease-in-out infinite;
+}
+
+/* faint grid lines, made with two repeating gradients */
+.cp-grid-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 65% at 50% 40%, #000 20%, transparent 78%);
+  mask-image: radial-gradient(ellipse 80% 65% at 50% 40%, #000 20%, transparent 78%);
+}
+
+/* a dot texture that gives the page some depth */
+.cp-grain { position: relative; }
+.cp-grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 3px 3px;
+  animation: cp-grain-shift 6s steps(4) infinite;
+}
+@keyframes cp-grain-shift {
+  0%   { background-position: 0 0; }
+  25%  { background-position: 3px 3px; }
+  50%  { background-position: 6px 0; }
+  75%  { background-position: 3px 6px; }
+  100% { background-position: 0 0; }
+}
+
+/* shapes that float up and down */
+.cp-float { animation: cp-float 7s ease-in-out infinite; }
+.cp-float--slow { animation: cp-float 11s ease-in-out infinite; }
+.cp-float--delay { animation-delay: -3.5s; }
+.cp-bob { animation: cp-bob 5.5s ease-in-out infinite; }
+
+/* a blob that slowly changes shape */
+.cp-blob {
+  background: linear-gradient(140deg, var(--ng-green-500), var(--ng-green-700));
+  animation: cp-blob 12s ease-in-out infinite;
+}
+
+/* spinning rings, used for the radar and the spinners */
+.cp-spin { animation: cp-spin 3s linear infinite; }
+.cp-spin-slow { animation: cp-spin 26s linear infinite; }
+
+/* the scrolling ticker */
+.cp-marquee {
+  display: flex;
+  overflow: hidden;
+  gap: 0;
+}
+.cp-marquee__track {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  padding-right: 48px;
+  flex: 0 0 auto;
+  min-width: 100%;
+  animation: cp-marquee var(--marquee-speed, 32s) linear infinite;
+}
+.cp-marquee:hover .cp-marquee__track { animation-play-state: paused; }
+.cp-marquee__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  font-weight: 600;
+  color: var(--ink-500);
+}
+.cp-marquee__item::before {
+  content: "";
+  width: 8px; height: 8px;
+  border-radius: 2px;
+  background: var(--ng-green-500);
+  transform: rotate(45deg);
+}
+
+/* the waving flag divider, two big rounded layers */
+.cp-wave {
+  position: relative;
+  height: 70px;
+  overflow: hidden;
+  line-height: 0;
+}
+.cp-wave__layer {
+  position: absolute;
+  left: -70%;
+  bottom: -78%;
+  width: 240%;
+  height: 150%;
+  border-radius: 50%;
+}
+.cp-wave__layer--green { background: var(--ng-green-600); animation: cp-wave-slide 14s linear infinite; }
+.cp-wave__layer--white { background: #fff; bottom: -92%; animation: cp-wave-slide 9s linear infinite reverse; }
+
+/* the grey loading placeholder */
+.cp-skeleton {
+  background: linear-gradient(100deg, rgba(0,135,81,.06) 8%, rgba(0,135,81,.16) 20%, rgba(0,135,81,.06) 34%);
+  background-size: 220% 100%;
+  animation: cp-shimmer 1.5s linear infinite;
+  border-radius: var(--r-sm);
+}
+
+
+/* ---------------------------------------------------------------
+   4. SMALL EFFECTS ON HOVER AND CLICK
+   --------------------------------------------------------------- */
+
+/* the ripple - javascript adds a span and this animates it away */
+.cp-ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  background: rgba(255, 255, 255, 0.45);
+  pointer-events: none;
+  animation: cp-ripple-out 600ms ease forwards;
+}
+.cp-ripple--dark { background: rgba(0, 135, 81, 0.18); }
+@keyframes cp-ripple-out {
+  to { transform: scale(2.6); opacity: 0; }
+}
+
+/* the magnetic button - javascript moves it, css makes it smooth */
+.cp-magnetic { display: inline-flex; transition: transform 300ms ease; }
+
+/* the 3d tilt card */
+.cp-tilt { transition: transform 350ms ease, box-shadow 350ms ease; }
+
+/* the soft light that follows the pointer */
+.cp-glow {
+  position: absolute;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle, rgba(0, 135, 81, 0.2), transparent 62%);
+  transform: translate3d(-50%, -50%, 0);
+  transition: opacity 250ms ease;
+}
+
+/* a border that slowly changes colour */
+.cp-draw-border {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(120deg, var(--ng-green-500), var(--gold-400), var(--ng-green-500)) border-box;
+  background-size: 100% 100%, 240% 100%;
+  animation: cp-text-pan 5s linear infinite;
+}
+
+/* the little dot on a live badge */
+.cp-live-dot { position: relative; }
+.cp-live-dot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: currentColor;
+  animation: cp-pulse-dot 2s ease-in-out infinite;
+}
+
+/* shake when something is wrong, pop when something changes */
+.cp-shake { animation: cp-shake 500ms ease; }
+.cp-pop { animation: cp-pop 350ms ease; }
+
+/* the bar at the very top of the page that shows how far you scrolled */
+.cp-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px; width: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--ng-green-600), var(--ng-green-400), var(--gold-400));
+  z-index: 120;
+}
+
+
+/* ---------------------------------------------------------------
+   5. TEXT EFFECTS
+   --------------------------------------------------------------- */
+
+/* javascript puts every word inside two spans so it can slide up
+   from behind the line */
+.cp-split .cp-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.cp-split .cp-word-in {
+  display: inline-block;
+  transform: translateY(110%);
+  opacity: 0;
+  transition: transform 0.8s ease, opacity 0.6s ease;
+}
+.cp-split.is-visible .cp-word-in { transform: translateY(0); opacity: 1; }
+
+/* the same thing but one letter at a time */
+.cp-split--chars .cp-word { overflow: visible; }
+.cp-split--chars .cp-word-in {
+  transform: translateY(16px) rotateX(-70deg);
+  transform-origin: 50% 0%;
+  transition: transform 0.7s ease, opacity 0.55s ease;
+}
+.cp-split--chars.is-visible .cp-word-in { transform: translateY(0) rotateX(0deg); }
+
+/* a light that travels across the letters */
+.cp-shimmer-text {
+  --shimmer: linear-gradient(100deg, #046b4b 18%, #10a96c 36%, #f0a500 52%, #10a96c 68%, #046b4b 84%);
+  background-image: var(--shimmer);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: cp-text-pan 6s linear infinite;
+}
+.section--deep .cp-shimmer-text,
+.hero .cp-shimmer-text,
+.lab-hero .cp-shimmer-text {
+  --shimmer: linear-gradient(100deg, #7ce0b4 18%, #d6f5e8 36%, #ffd98a 52%, #2ec489 68%, #7ce0b4 84%);
+}
+
+/* when a line is also split into words the gradient has to go on each
+   word, because a word that moves is painted outside the line's box */
+.cp-split.cp-shimmer-text,
+.cp-split .cp-shimmer-text {
+  background-image: none;
+  color: inherit;
+  animation: none;
+}
+.cp-split.cp-shimmer-text .cp-word-in,
+.cp-split .cp-shimmer-text .cp-word-in {
+  background-image: var(--shimmer);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: cp-text-pan 6s linear infinite;
+}
+
+/* the blinking line at the end of typed text */
+.cp-caret {
+  display: inline-block;
+  width: 2px; height: 1.05em;
+  background: currentColor;
+  vertical-align: -0.16em;
+  margin-left: 3px;
+  animation: cp-caret 1s steps(1) infinite;
+}
+
+/* the three dots that show someone is typing */
+.cp-typing { display: inline-flex; gap: 5px; align-items: center; }
+.cp-typing i {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: cp-typing 1.1s ease-in-out infinite;
+}
+.cp-typing i:nth-child(2) { animation-delay: 0.15s; }
+.cp-typing i:nth-child(3) { animation-delay: 0.3s; }
+
+
+/* ---------------------------------------------------------------
+   6. STATUS PILLS
+   --------------------------------------------------------------- */
+
+.cp-status {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px 6px 12px;
+  border-radius: var(--r-pill);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  overflow: hidden;
+}
+.cp-status::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  opacity: 0.12;
+}
+.cp-status__dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+.cp-status--new      { color: var(--status-new); }
+.cp-status--new .cp-status__dot { animation: cp-pulse-dot 1.9s ease-in-out infinite; }
+.cp-status--review   { color: var(--status-review); }
+.cp-status--review .cp-status__dot { animation: cp-pulse-dot 2.4s ease-in-out infinite; }
+.cp-status--progress { color: var(--status-progress); }
+.cp-status--progress .cp-status__dot { border-radius: 2px; animation: cp-spin 1.8s linear infinite; }
+.cp-status--fixed    { color: var(--status-fixed); }
+.cp-status--fixed .cp-status__dot { background: var(--status-fixed); }
+
+
+/* ---------------------------------------------------------------
+   7. THE ROUND PROGRESS RING
+   made with a conic-gradient so we do not need a svg
+   --------------------------------------------------------------- */
+
+.cp-ring {
+  position: relative;
+  width: 132px; height: 132px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: conic-gradient(var(--gold-400) calc(var(--p, 0) * 1%), rgba(255, 255, 255, 0.12) 0);
+  animation: cp-bounce-in 900ms ease both;
+}
+.cp-ring::before {
+  content: "";
+  position: absolute;
+  inset: 11px;
+  border-radius: 50%;
+  background: var(--ng-green-900);
+}
+.cp-ring__value {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+
+/* ---------------------------------------------------------------
+   8. EXTRA CLASSES
+   --------------------------------------------------------------- */
+
+.cp-anim-float     { animation: cp-float 7s ease-in-out infinite; }
+.cp-anim-float-sm  { animation: cp-float-sm 4.5s ease-in-out infinite; }
+.cp-anim-spin      { animation: cp-spin 1.1s linear infinite; }
+.cp-anim-spin-slow { animation: cp-spin 20s linear infinite; }
+.cp-anim-pulse     { animation: cp-pulse-dot 2.4s ease-in-out infinite; }
+.cp-anim-bounce    { animation: cp-bounce-in 700ms ease both; }
+.cp-anim-blob      { animation: cp-blob 12s ease-in-out infinite; }
+.cp-anim-breathe   { animation: cp-breathe 2.4s ease-in-out infinite; }
+.cp-anim-delay-1 { animation-delay: 120ms; }
+.cp-anim-delay-2 { animation-delay: 260ms; }
+.cp-anim-delay-3 { animation-delay: 400ms; }
+.cp-anim-delay-4 { animation-delay: 560ms; }
+.cp-anim-delay-5 { animation-delay: 720ms; }
+
+/* used when a filtered report comes back on screen */
+.cp-enter { animation: cp-enter 420ms ease both; }
+@keyframes cp-enter {
+  from { opacity: 0; transform: translateX(-14px) scale(0.97); }
+  to   { opacity: 1; transform: none; }
+}
+
+
+/* ---------------------------------------------------------------
+   9. IF THE VISITOR ASKED FOR LESS MOTION
+   we turn everything off
+   --------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .cp-motion [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+  .cp-split .cp-word-in { transform: none !important; opacity: 1 !important; }
+  .cp-marquee__track,
+  .cp-aurora span,
+  .cp-wave__layer { animation: none !important; }
+}

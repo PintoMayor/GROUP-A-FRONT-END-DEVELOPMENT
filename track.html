@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Track a Report — CivicPulse</title>
+<meta name="description" content="Enter your CivicPulse reference code to see the live status, every update and the official response for a community report." />
+<meta name="author" content="Pinmo Paul" />
+<meta name="theme-color" content="#008751" />
+
+<link rel="stylesheet" href="assets/css/base.css" />
+<link rel="stylesheet" href="assets/css/animations.css" />
+<link rel="stylesheet" href="assets/css/app.css" />
+<link rel="stylesheet" href="assets/css/pages.css" />
+<link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAZUlEQVR42u3XSw4AEAxFUVu0KstmAUJKf0+8Jsb3zLSlPDWtdtFLibpgtHEVwip+hbCOHyG84iKEd3yLiIovEX8DouMTggACCCAgHcC/AAKQvpBArGQQSynEWg5xmECcZhDHqfMMh1NRyGzSnHYAAAAASUVORK5CYII=" />
+
+<script>
+  // We hide the page content with css until the animation script is
+  // ready to show it again. If that script does not load, we take the
+  // class off after 3 seconds so the page is never left blank.
+  document.documentElement.classList.add("cp-motion");
+  setTimeout(function () {
+    if (!window.cpReady) {
+      document.documentElement.classList.remove("cp-motion");
+    }
+  }, 3000);
+</script>
+</head>
+
+<body data-cursor="on">
+<div class="cp-progress" data-progress aria-hidden="true"></div>
+
+<!-- HEADER -->
+<header class="header header--over-dark" data-header>
+  <nav class="container nav" aria-label="Main navigation">
+    <a href="index.html" class="nav__brand">
+      <span class="nav__mark" aria-hidden="true">
+        <span class="ico ico--home ico--sm"></span>
+      </span>
+      <span class="nav__brand-text">Civic<span>Pulse</span></span>
+    </a>
+
+    <button class="nav__toggle" data-nav-toggle aria-label="Toggle menu" aria-expanded="false">
+      <span class="ico ico--menu"></span>
+    </button>
+
+    <div class="nav__links" id="nav-links" data-nav-links>
+      <a href="index.html#how"        class="nav__link" data-nav-link>How it works</a>
+      <a href="index.html#categories" class="nav__link" data-nav-link>Categories</a>
+      <a href="index.html#reports"    class="nav__link" data-nav-link>Live reports</a>
+      <a href="track.html"            class="nav__link" data-nav-link>Track a report</a>
+      <a href="report.html" class="btn btn--primary btn--sm nav__cta" data-ripple data-magnetic="0.18">
+        Report a problem
+        <span class="ico ico--arrow ico--sm"></span>
+      </a>
+    </div>
+  </nav>
+</header>
+
+<main>
+
+<!-- PAGE HEAD -->
+<section class="page-head cp-grain">
+  <div class="cp-aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+  <div class="container page-head__inner">
+    <div data-reveal="up">
+      <span class="eyebrow"><span class="dot"></span> Report tracking</span>
+      <h1>See exactly <span class="text-gradient">what is being done</span></h1>
+      <p>Type the reference code you were given when you reported, and we will show you the live status, the full history and the official response.</p>
+    </div>
+    <div class="page-head__aside" data-reveal="up" data-delay="2">
+      <div class="mini-stat"><b id="head-total">0</b><span>tracked</span></div>
+      <div class="mini-stat"><b id="head-fixed">0</b><span>resolved</span></div>
+      <div class="mini-stat"><b>100%</b><span>public</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- TRACKER -->
+<section class="section section--tight" id="track-section">
+  <div class="container">
+
+    <div class="track-bar" data-reveal="up">
+      <span class="ico ico--search" style="color:var(--ink-400)" aria-hidden="true"></span>
+      <input class="input" type="search" id="track-input" placeholder="Enter a reference code, e.g. CP-4821" aria-label="Report reference code" />
+      <button class="btn btn--primary" id="track-button" data-ripple>
+        <span class="ico ico--search ico--sm"></span>
+        Track report
+      </button>
+    </div>
+
+    <div class="chip-row" style="margin-top:var(--sp-3)">
+      <span class="muted" style="font-size:var(--fs-xs)">Try one of these:</span>
+      <button class="filter" data-sample="CP-4821">CP-4821</button>
+      <button class="filter" data-sample="CP-4815">CP-4815</button>
+      <button class="filter" data-sample="CP-4790">CP-4790</button>
+      <button class="filter" data-sample="CP-4702">CP-4702</button>
+    </div>
+
+    <!-- ---------- the result panel ---------- -->
+    <div class="track-result" id="track-result" hidden>
+
+      <div class="track-card" id="track-card" data-reveal="up">
+        <div class="track-card__top">
+          <div>
+            <span class="report__id" id="track-id">CP-0000</span>
+            <h2 id="track-title">Report title</h2>
+          </div>
+          <span class="cp-status cp-status--new" id="track-status"><i class="cp-status__dot"></i>New</span>
+        </div>
+
+        <div class="admin__detail-meta">
+          <span><span class="ico ico--pin ico--sm" style="color:var(--ink-300)"></span> <span id="track-location">Location</span></span>
+          <span><span class="ico ico--clock ico--sm" style="color:var(--ink-300)"></span> <span id="track-time">Just now</span></span>
+          <span><span class="ico ico--users ico--sm" style="color:var(--ink-300)"></span> <span id="track-category">Category</span></span>
+        </div>
+
+        <!-- the four-stage progress bar -->
+        <div class="stepper" id="stepper">
+          <span class="stepper__fill" id="stepper-fill"></span>
+          <div class="step" data-step="New"><span class="step__dot">1</span>Reported</div>
+          <div class="step" data-step="In Review"><span class="step__dot">2</span>Review</div>
+          <div class="step" data-step="In Progress"><span class="step__dot">3</span>Working</div>
+          <div class="step" data-step="Resolved"><span class="step__dot">4</span>Resolved</div>
+        </div>
+
+        <p id="track-description" style="color:var(--ink-700);font-size:var(--fs-sm)"></p>
+
+        <div class="admin__block">
+          <h3>History</h3>
+          <ul class="timeline" id="track-timeline"></ul>
+        </div>
+      </div>
+
+      <aside>
+        <div class="aside-card">
+          <h3>Support this report</h3>
+          <p class="muted" style="font-size:var(--fs-sm)">More support pushes the report up the department's queue.</p>
+          <button class="btn btn--primary" id="track-vote" style="margin-top:var(--sp-3)" data-ripple>
+            <span class="ico ico--thumb ico--sm"></span>
+            <span id="track-votes">0</span> supporters
+          </button>
+        </div>
+
+        <div class="aside-card">
+          <h3>What happens next?</h3>
+          <ul class="aside-list">
+            <li><span class="ico ico--check ico--sm" style="color:var(--ng-green-600)"></span><span><b>In Review</b>The ward officer confirms the report on the ground.</span></li>
+            <li><span class="ico ico--check ico--sm" style="color:var(--ng-green-600)"></span><span><b>In Progress</b>A team is scheduled and the work starts.</span></li>
+            <li><span class="ico ico--check ico--sm" style="color:var(--ng-green-600)"></span><span><b>Resolved</b>The fix is verified and the community is notified.</span></li>
+          </ul>
+        </div>
+
+        <div class="aside-card">
+          <h3>Not the right report?</h3>
+          <a href="report.html" class="btn btn--outline btn--sm" style="margin-top:var(--sp-2)" data-ripple>
+            <span class="ico ico--pen ico--sm"></span>
+            Report a different problem
+          </a>
+        </div>
+      </aside>
+
+    </div>
+
+    <!-- ---------- not found ---------- -->
+    <div class="not-found" id="track-missing" hidden>
+      <h3>We could not find that report</h3>
+      <p id="track-missing-text">Check the code and try again. It looks like: CP-4821</p>
+      <a href="index.html#reports" class="btn btn--outline btn--sm" style="margin-top:var(--sp-4)">Browse all live reports</a>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer cp-grain">
+  <div class="container">
+    <div class="footer__grid">
+      <div style="max-width:320px">
+        <div class="nav__brand" style="margin-bottom:16px">
+          <span class="nav__mark" aria-hidden="true"><span class="ico ico--home ico--sm"></span></span>
+          <span class="nav__brand-text" style="color:#fff">Civic<span style="color:var(--ng-green-300)">Pulse</span></span>
+        </div>
+        <p style="font-size:var(--fs-sm)">A community problem reporting and tracking platform for Nigerian neighbourhoods. Report it, follow it, see it fixed.</p>
+      </div>
+
+      <div>
+        <h4>Platform</h4>
+        <ul style="display:grid;gap:10px;font-size:var(--fs-sm)">
+          <li><a href="index.html#how">How it works</a></li>
+          <li><a href="index.html#categories">Categories</a></li>
+          <li><a href="index.html#reports">Live reports</a></li>
+          <li><a href="index.html#impact">Impact</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>For residents</h4>
+        <ul style="display:grid;gap:10px;font-size:var(--fs-sm)">
+          <li><a href="report.html">Report a problem</a></li>
+          <li><a href="track.html">Track a report</a></li>
+          <li><a href="#">Community guidelines</a></li>
+          <li><a href="#">Help centre</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>For officials</h4>
+        <ul style="display:grid;gap:10px;font-size:var(--fs-sm)">
+          <li><a href="admin.html">Admin dashboard</a></li>
+          <li><a href="admin.html">Review queue</a></li>
+          <li><a href="#">Service targets</a></li>
+          <li><a href="#">Data export</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <p>© 2026 CivicPulse. Project by <strong style="color:#fff">Pinmo Paul</strong> — Group A, Front End Development Track.</p>
+      <p>Built with HTML, CSS, Flexbox &amp; vanilla JavaScript.</p>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"><span class="ico ico--check ico--sm"></span><span id="toast-text">Done</span></div>
+
+<script src="assets/js/animations.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages.js"></script>
+</body>
+</html>

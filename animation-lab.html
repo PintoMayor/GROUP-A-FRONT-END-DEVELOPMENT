@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CivicPulse — Animation Lab (CSS &amp; JavaScript only)</title>
+<meta name="description" content="Every CivicPulse animation explained in plain language, built with nothing but CSS keyframes, transitions and basic JavaScript DOM manipulation." />
+<meta name="author" content="Pinmo Paul" />
+<link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAZUlEQVR42u3XSw4AEAxFUVu0KstmAUJKf0+8Jsb3zLSlPDWtdtFLibpgtHEVwip+hbCOHyG84iKEd3yLiIovEX8DouMTggACCCAgHcC/AAKQvpBArGQQSynEWg5xmECcZhDHqfMMh1NRyGzSnHYAAAAASUVORK5CYII=" />
+
+<link rel="stylesheet" href="assets/css/base.css" />
+<link rel="stylesheet" href="assets/css/animations.css" />
+<link rel="stylesheet" href="assets/css/app.css" />
+
+<script>
+  // We hide the page content with css until the animation script is
+  // ready to show it again. If that script does not load, we take the
+  // class off after 3 seconds so the page is never left blank.
+  document.documentElement.classList.add("cp-motion");
+  setTimeout(function () {
+    if (!window.cpReady) {
+      document.documentElement.classList.remove("cp-motion");
+    }
+  }, 3000);
+</script>
+
+<style>
+  .demo-box {
+    padding: 16px 24px;
+    border-radius: 14px;
+    background: linear-gradient(140deg, var(--ng-green-100), var(--ng-green-200));
+    color: var(--ng-green-800);
+    font-weight: 700;
+    text-align: center;
+    min-width: 150px;
+    box-shadow: var(--sh-sm);
+  }
+  .demo-box--gold { background: linear-gradient(140deg, var(--gold-100), #FFE2A8); color: var(--gold-700); }
+  .demo-box--dark { background: linear-gradient(140deg, var(--ng-green-800), var(--ng-green-900)); color: #fff; }
+  .demo-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: center; width: 100%; }
+  .demo-scroll {
+    height: 220px;
+    overflow-y: auto;
+    width: 100%;
+    border-radius: var(--r-md);
+    border: 1px dashed var(--line-strong);
+    padding: 18px;
+    background: var(--cream);
+  }
+  .demo-scroll > * { margin-bottom: 14px; }
+  .lab-lede { font-size: 1.05rem; color: rgba(255, 255, 255, 0.72); max-width: 64ch; margin-top: 18px; }
+  .lab-stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; width: 100%; }
+  .lab-stat {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: var(--r-md);
+    padding: 18px; text-align: center; color: #fff;
+  }
+  .lab-stat b { display: block; font-family: var(--font-display); font-size: 2rem; line-height: 1; }
+  .lab-stat small { color: rgba(255, 255, 255, 0.55); font-size: 0.75rem; }
+
+  .howto {
+    background: var(--ng-green-900);
+    color: rgba(255, 255, 255, 0.78);
+    border-radius: var(--r-lg);
+    padding: 26px 28px;
+    margin-bottom: 34px;
+  }
+  .howto h3 { color: #fff; margin-bottom: 12px; font-size: var(--fs-lg); }
+  .howto ol { padding-left: 20px; list-style: decimal; display: grid; gap: 10px; font-size: var(--fs-sm); }
+  .howto code {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    background: rgba(255, 255, 255, 0.12);
+    padding: 2px 7px; border-radius: 5px; color: var(--ng-green-300);
+  }
+  .howto b { color: #fff; }
+</style>
+</head>
+
+<body data-cursor="on">
+<div class="cp-progress" data-progress aria-hidden="true"></div>
+
+<!-- HEADER -->
+<header class="header header--over-dark" data-header>
+  <nav class="container nav">
+    <a href="index.html" class="nav__brand">
+      <span class="nav__mark" aria-hidden="true"><span class="ico ico--home ico--sm"></span></span>
+      <span class="nav__brand-text">Civic<span>Pulse</span></span>
+    </a>
+
+    <button class="nav__toggle" data-nav-toggle aria-label="Toggle menu" aria-expanded="false">
+      <span class="ico ico--menu"></span>
+    </button>
+
+    <div class="nav__links" data-nav-links>
+      <a href="index.html" class="nav__link">← Back to site</a>
+      <a href="#how" class="nav__link">How it works</a>
+      <a href="#reveals" class="nav__link">Reveals</a>
+      <a href="#micro" class="nav__link">Micro</a>
+      <a href="#text" class="nav__link">Text</a>
+      <a href="#ambient" class="nav__link">Ambient</a>
+      <a href="#api" class="nav__link">API</a>
+    </div>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="lab-hero cp-grain">
+  <div class="cp-aurora" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  <div class="cp-grid-overlay" aria-hidden="true"></div>
+  <div class="container" style="position:relative;z-index:3">
+    <span class="pill pill--glass" data-reveal="fade">
+      <span class="dot cp-live-dot" style="color:#0AA465"></span> CSS + vanilla JavaScript only
+    </span>
+    <h1 style="margin-top:18px">
+      <span data-split="words" data-delay="1">The CivicPulse</span>
+      <span data-split="words" data-delay="3" class="cp-shimmer-text">motion system</span>
+    </h1>
+    <p class="lab-lede" data-reveal="up" data-delay="3">
+      Every animation on this page is made with the same three things:
+      <strong>CSS keyframes</strong>, <strong>CSS transitions</strong> and
+      <strong>JavaScript that adds and removes class names</strong>.
+      No animation library. No SVG. No canvas. Just the stuff we have done in class.
+    </p>
+    <div class="lab-stat-row" style="margin-top:36px" data-stagger="110">
+      <div class="lab-stat"><b data-count-to="14">0</b><small>Reveal variants</small></div>
+      <div class="lab-stat"><b data-count-to="9">0</b><small>Micro-interactions</small></div>
+      <div class="lab-stat"><b data-count-to="5">0</b><small>Text effects</small></div>
+      <div class="lab-stat"><b data-count-to="5">0</b><small>Ambient layers</small></div>
+      <div class="lab-stat"><b data-count-to="0" data-count-suffix=" libs">0</b><small>Third-party libraries</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how">
+  <div class="container">
+    <div class="lab-section-title" data-reveal="up">
+      <span class="eyebrow"><span class="dot"></span> 00</span>
+      <h2>How every animation here works</h2>
+    </div>
+
+    <div class="howto" data-reveal="up">
+      <h3>The same pattern is used on every page</h3>
+      <ol>
+        <li><b>CSS hides the element first.</b> If an element has <code>data-reveal</code> on it, the css gives it <code>opacity: 0</code> and moves it down a bit with <code>transform: translateY(...)</code>.</li>
+        <li><b>JavaScript listens for scrolling.</b> On every scroll we use <code>getBoundingClientRect()</code> to find out how far down the page each element is.</li>
+        <li><b>When the element gets close to the screen we add one class:</b> <code>el.classList.add("is-visible")</code>.</li>
+        <li><b>Then css does the animating.</b> The <code>.is-visible</code> class sets <code>opacity: 1</code> and moves the element back, and the <code>transition</code> on the element makes it slide smoothly.</li>
+      </ol>
+      <p style="margin-top:16px;font-size:var(--fs-sm);color:rgba(255,255,255,.6)">
+        That is the whole idea. JavaScript does not animate anything by itself, it only
+        adds and removes class names and the browser does the rest. It is all plain
+        <b>DOM manipulation</b>, which is what the whole project is built on.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- SCROLL REVEALS -->
+<section class="section section--mint" id="reveals">
+  <div class="container">
+    <div class="lab-section-title" data-reveal="up">
+      <span class="eyebrow"><span class="dot"></span> 01</span>
+      <h2>Scroll reveals</h2>
+    </div>
+    <p class="lead" style="max-width:64ch;margin-bottom:30px" data-reveal="up">
+      It is the same idea every time, the only difference is where the element
+      starts from. Change the value inside
+      <code class="mono" style="background:rgba(0,135,81,.08);padding:2px 8px;border-radius:5px">data-reveal</code>
+      and the element comes in from a different direction.
+    </p>
+
+    <div class="lab-grid" data-stagger="60">
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">01</span><div><h3>Fade</h3><p>Opacity only — the safest reveal</p></div></div>
+        <div class="demo__stage"><div class="demo-box" data-reveal="fade">Fade</div></div>
+        <div class="demo__foot"><code class="demo__code">data-reveal="fade"</code><button class="demo__copy" data-copy='data-reveal="fade"'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">02</span><div><h3>Rise up</h3><p>Classic upward drift</p></div></div>
+        <div class="demo__stage"><div class="demo-box" data-reveal="up">Rise</div></div>
+        <div class="demo__foot"><code class="demo__code">data-reveal="up"</code><button class="demo__copy" data-copy='data-reveal="up"'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">03</span><div><h3>Slide across</h3><p>Horizontal entrance</p></div></div>
+        <div class="demo__stage">
+          <div class="demo-row">
+            <div class="demo-box" data-reveal="left">Left</div>
+            <div class="demo-box" data-reveal="right">Right</div>
+          </div>
+        </div>
+        <div class="demo__foot"><code class="demo__code">data-reveal="left" | "right"</code><button class="demo__copy" data-copy='data-reveal="left"'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">04</span><div><h3>Zoom &amp; flip</h3><p>Scale and rotation</p></div></div>
+        <div class="demo__stage">
+          <div class="demo-row">
+            <div class="demo-box" data-reveal="zoom">Zoom</div>
+            <div class="demo-box" data-reveal="flip">Flip</div>
+          </div>
+        </div>
+        <div class="demo__foot"><code class="demo__code">data-reveal="zoom" | "flip"</code><button class="demo__copy" data-copy='data-reveal="zoom"'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">05</span><div><h3>Blur focus</h3><p>Focus pulled from soft focus</p></div></div>
+        <div class="demo__stage"><div class="demo-box" data-reveal="blur-up">Blur focus</div></div>
+        <div class="demo__foot"><code class="demo__code">data-reveal="blur-up"</code><button class="demo__copy" data-copy='data-reveal="blur-up"'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">06</span><div><h3>Sweep wipe</h3><p>Green-and-gold curtain slides off</p></div></div>
+        <div class="demo__stage"><div class="demo-box demo-box--gold" data-reveal="sweep">Sweep</div></div>
+        <div class="demo__foot"><code class="demo__code">data-reveal="sweep"</code><button class="demo__copy" data-copy='data-reveal="sweep"'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">07</span><div><h3>Grow from nothing</h3><p>Scales up from a tiny size</p></div></div>
+        <div class="demo__stage"><div class="demo-box" data-reveal="grow">Grow</div></div>
+        <div class="demo__foot"><code class="demo__code">data-reveal="grow"</code><button class="demo__copy" data-copy='data-reveal="grow"'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">08</span><div><h3>Stagger</h3><p>Children cascade one after another</p></div></div>
+        <div class="demo__stage">
+          <div class="demo-row" data-stagger="140">
+            <div class="demo-box" data-reveal="up">1</div>
+            <div class="demo-box" data-reveal="up">2</div>
+            <div class="demo-box" data-reveal="up">3</div>
+            <div class="demo-box" data-reveal="up">4</div>
+          </div>
+        </div>
+        <div class="demo__foot"><code class="demo__code">data-stagger="140"</code><button class="demo__copy" data-copy='data-stagger="140"'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">09</span><div><h3>Five more</h3><p>The remaining variants</p></div></div>
+        <div class="demo__stage">
+          <div class="demo-row" data-stagger="90">
+            <div class="demo-box" data-reveal="down">Down</div>
+            <div class="demo-box" data-reveal="zoom-far">Zoom far</div>
+            <div class="demo-box" data-reveal="blur">Blur</div>
+            <div class="demo-box" data-reveal="tilt">Tilt</div>
+            <div class="demo-box" data-reveal="rise">Rise</div>
+          </div>
+        </div>
+        <div class="demo__foot"><code class="demo__code">data-reveal="down" | "zoom-far" | "blur" | "tilt" | "rise"</code><button class="demo__copy" data-copy='data-reveal="zoom-far"'>Copy</button></div>
+      </article>
+    </div>
+
+    <div class="demo" style="margin-top:20px" data-reveal="up">
+      <div class="demo__head"><span class="demo__idx">10</span><div><h3>Scroll sandbox</h3><p>Scroll inside the box to trigger reveals with the real scroll logic</p></div></div>
+      <div class="demo__stage" style="display:block">
+        <div class="demo-scroll">
+          <div class="demo-box" data-reveal="up" style="margin-right:auto">Top of the box</div>
+          <div class="demo-box" data-reveal="right" style="margin-left:auto">Reveals from the right</div>
+          <div class="demo-box" data-reveal="zoom" style="margin-right:auto">Zooms in</div>
+          <div class="demo-box" data-reveal="blur-up" style="margin-left:auto">Pulls into focus</div>
+          <div class="demo-box" data-reveal="grow" style="margin-right:auto">Grows</div>
+          <div class="demo-box" data-reveal="up" style="margin-left:auto">Last one</div>
+        </div>
+      </div>
+      <div class="demo__foot"><code class="demo__code">scroll event + getBoundingClientRect()</code><span></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- MICRO-INTERACTIONS -->
+<section class="section" id="micro">
+  <div class="container">
+    <div class="lab-section-title" data-reveal="up">
+      <span class="eyebrow"><span class="dot"></span> 02</span>
+      <h2>Micro-interactions</h2>
+    </div>
+    <p class="lead" style="max-width:64ch;margin-bottom:30px" data-reveal="up">
+      These are the little reactions that make the site feel alive when you move
+      the mouse. They all follow the pointer, and they all stop working if the
+      visitor has turned on "reduce motion" in their device settings.
+    </p>
+
+    <div class="lab-grid" data-stagger="60">
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">01</span><div><h3>Magnetic button</h3><p>Element drifts toward the cursor</p></div></div>
+        <div class="demo__stage">
+          <span class="cp-magnetic" data-magnetic="0.35">
+            <a href="#" class="btn btn--primary" data-ripple>Magnet me</a>
+          </span>
+        </div>
+        <div class="demo__foot"><code class="demo__code">data-magnetic="0.35"</code><button class="demo__copy" data-copy='data-magnetic="0.35"'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">02</span><div><h3>Ripple</h3><p>Radial wave from the click point</p></div></div>
+        <div class="demo__stage">
+          <button class="btn btn--outline" data-ripple>Click me</button>
+        </div>
+        <div class="demo__foot"><code class="demo__code">data-ripple</code><button class="demo__copy" data-copy='data-ripple'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">03</span><div><h3>3D tilt</h3><p>Card rotates as the pointer moves</p></div></div>
+        <div class="demo__stage">
+          <div class="card" data-tilt="12" style="width:220px;padding:22px">
+            <div class="card__icon" style="margin-bottom:12px"><span class="ico ico--water"></span></div>
+            <h3 style="font-size:1rem">Tilt me</h3>
+            <p style="font-size:.82rem">Move the pointer across the card.</p>
+          </div>
+        </div>
+        <div class="demo__foot"><code class="demo__code">data-tilt="12"</code><button class="demo__copy" data-copy='data-tilt="12"'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">04</span><div><h3>Cursor glow</h3><p>Light follows the pointer</p></div></div>
+        <div class="demo__stage" style="position:relative" data-glow>
+          <p style="font-size:.88rem;color:var(--ink-500);text-align:center;max-width:22ch;position:relative;z-index:1">Move your pointer inside this panel.</p>
+        </div>
+        <div class="demo__foot"><code class="demo__code">data-glow</code><button class="demo__copy" data-copy='data-glow'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">05</span><div><h3>Gradient border</h3><p>Green-gold border that always shimmers</p></div></div>
+        <div class="demo__stage">
+          <div class="card cp-draw-border" style="width:200px;padding:20px;text-align:center">
+            <strong>Gradient border</strong>
+            <p style="font-size:.8rem;margin-top:6px">Two background layers</p>
+          </div>
+        </div>
+        <div class="demo__foot"><code class="demo__code">.cp-draw-border</code><button class="demo__copy" data-copy='class="cp-draw-border"'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">06</span><div><h3>Arrow nudge</h3><p>Arrow slides on button hover</p></div></div>
+        <div class="demo__stage">
+          <a href="#" class="btn btn--ghost">
+            Learn more
+            <span class="ico ico--arrow ico--sm"></span>
+          </a>
+        </div>
+        <div class="demo__foot"><code class="demo__code">.btn:hover .ico--arrow</code><button class="demo__copy" data-copy='class="ico ico--arrow"'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">07</span><div><h3>Status pills</h3><p>Live status indicators</p></div></div>
+        <div class="demo__stage">
+          <div class="demo-row">
+            <span class="cp-status cp-status--new"><i class="cp-status__dot"></i>New</span>
+            <span class="cp-status cp-status--review"><i class="cp-status__dot"></i>In review</span>
+            <span class="cp-status cp-status--progress"><i class="cp-status__dot"></i>In progress</span>
+            <span class="cp-status cp-status--fixed"><i class="cp-status__dot"></i>Resolved</span>
+          </div>
+        </div>
+        <div class="demo__foot"><code class="demo__code">.cp-status--new</code><button class="demo__copy" data-copy='class="cp-status cp-status--new"'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">08</span><div><h3>Hover lift</h3><p>Elevation on approach</p></div></div>
+        <div class="demo__stage">
+          <div class="card card--hover" style="width:200px;padding:20px;text-align:center">
+            <strong>Hover</strong>
+            <p style="font-size:.8rem;margin-top:6px">Lifts and deepens the shadow</p>
+          </div>
+        </div>
+        <div class="demo__foot"><code class="demo__code">.card--hover</code><button class="demo__copy" data-copy='class="card card--hover"'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">09</span><div><h3>Custom cursor</h3><p>Gold dot plus lagging green ring</p></div></div>
+        <div class="demo__stage">
+          <p style="font-size:.88rem;color:var(--ink-500);text-align:center">Enabled site-wide on desktop. The ring grows over interactive elements.</p>
+        </div>
+        <div class="demo__foot"><code class="demo__code">&lt;body data-cursor="on"&gt;</code><button class="demo__copy" data-copy='<body data-cursor="on">'>Copy</button></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- TEXT EFFECTS -->
+<section class="section section--mint" id="text">
+  <div class="container">
+    <div class="lab-section-title" data-reveal="up">
+      <span class="eyebrow"><span class="dot"></span> 03</span>
+      <h2>Text effects</h2>
+    </div>
+
+    <div class="lab-grid" data-stagger="60">
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">01</span><div><h3>Word split</h3><p>Words rise out of a hidden box</p></div></div>
+        <div class="demo__stage">
+          <h2 style="font-size:1.6rem" data-split="words">Reported and resolved</h2>
+        </div>
+        <div class="demo__foot"><code class="demo__code">data-split="words"</code><button class="demo__copy" data-copy='data-split="words"'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">02</span><div><h3>Character split</h3><p>Every letter flips up on its own</p></div></div>
+        <div class="demo__stage">
+          <h2 style="font-size:1.6rem" data-split="chars">CivicPulse</h2>
+        </div>
+        <div class="demo__foot"><code class="demo__code">data-split="chars"</code><button class="demo__copy" data-copy='data-split="chars"'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">03</span><div><h3>Scramble / decode</h3><p>Hover to shuffle the letters</p></div></div>
+        <div class="demo__stage">
+          <h2 class="cp-scramble" data-scramble="CIVICPULSE" style="font-size:1.5rem;letter-spacing:.04em">CIVICPULSE</h2>
+        </div>
+        <div class="demo__foot"><code class="demo__code">data-scramble="CIVICPULSE"</code><button class="demo__copy" data-copy='data-scramble="CIVICPULSE"'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">04</span><div><h3>Typewriter</h3><p>Types itself out on load</p></div></div>
+        <div class="demo__stage">
+          <p style="font-size:1.05rem;font-weight:600;color:var(--ink-700)">
+            <span data-typewriter data-typewriter-speed="70">Report it. Track it. See it fixed.</span>
+          </p>
+        </div>
+        <div class="demo__foot"><code class="demo__code">data-typewriter</code><button class="demo__copy" data-copy='data-typewriter'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">05</span><div><h3>Shimmer text</h3><p>A light travelling across the letters</p></div></div>
+        <div class="demo__stage">
+          <h2 class="cp-shimmer-text" style="font-size:1.6rem">Civic Pulse</h2>
+        </div>
+        <div class="demo__foot"><code class="demo__code">.cp-shimmer-text</code><button class="demo__copy" data-copy='class="cp-shimmer-text"'>Copy</button></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- AMBIENT -->
+<section class="section" id="ambient">
+  <div class="container">
+    <div class="lab-section-title" data-reveal="up">
+      <span class="eyebrow"><span class="dot"></span> 04</span>
+      <h2>Ambient layers</h2>
+    </div>
+
+    <div class="lab-grid" data-stagger="60">
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">01</span><div><h3>Gradient flow</h3><p>Slow moving Nigerian green to gold</p></div></div>
+        <div class="demo__stage" style="padding:0">
+          <div class="cp-gradient-flow" style="height:180px"></div>
+        </div>
+        <div class="demo__foot"><code class="demo__code">.cp-gradient-flow</code><button class="demo__copy" data-copy='class="cp-gradient-flow"'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">02</span><div><h3>Aurora mesh</h3><p>Drifting blurred colour blobs</p></div></div>
+        <div class="demo__stage" style="padding:0;position:relative;overflow:hidden;background:var(--cream)">
+          <div class="cp-aurora" style="position:absolute;inset:-30%"><span></span><span></span><span></span><span></span></div>
+        </div>
+        <div class="demo__foot"><code class="demo__code">.cp-aurora &gt; span ×4</code><button class="demo__copy" data-copy='<div class="cp-aurora"><span></span>…</div>'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">03</span><div><h3>Radar sweep</h3><p>A conic-gradient rotating like a radar</p></div></div>
+        <div class="demo__stage" style="padding:0;position:relative;overflow:hidden;background:#063a29">
+          <div class="map" style="position:absolute;inset:0;max-width:none;border-radius:0;aspect-ratio:auto;box-shadow:none">
+            <div class="map__roads"></div>
+            <div class="map__sweep"></div>
+            <div class="map__sweep map__sweep--gold"></div>
+          </div>
+        </div>
+        <div class="demo__foot"><code class="demo__code">conic-gradient + rotate</code><button class="demo__copy" data-copy='background: conic-gradient(...)'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">04</span><div><h3>Liquid blob</h3><p>Border-radius morphing shape</p></div></div>
+        <div class="demo__stage">
+          <div class="cp-blob" style="width:110px;height:110px"></div>
+        </div>
+        <div class="demo__foot"><code class="demo__code">.cp-blob</code><button class="demo__copy" data-copy='class="cp-blob"'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">05</span><div><h3>Marquee</h3><p>Infinite ticker, pauses on hover</p></div></div>
+        <div class="demo__stage" style="padding:0">
+          <div class="cp-marquee" style="--marquee-speed:14s;padding-block:14px;background:var(--cream)">
+            <div class="cp-marquee__track">
+              <span class="cp-marquee__item">Report</span>
+              <span class="cp-marquee__item">Track</span>
+              <span class="cp-marquee__item">Resolve</span>
+              <span class="cp-marquee__item">Report</span>
+              <span class="cp-marquee__item">Track</span>
+              <span class="cp-marquee__item">Resolve</span>
+            </div>
+          </div>
+        </div>
+        <div class="demo__foot"><code class="demo__code">.cp-marquee</code><button class="demo__copy" data-copy='class="cp-marquee"'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">06</span><div><h3>Nigerian flag wave</h3><p>Two ellipse layers sliding past each other</p></div></div>
+        <div class="demo__stage" style="padding:0;background:var(--cream)">
+          <div class="cp-wave">
+            <div class="cp-wave__layer cp-wave__layer--green"></div>
+            <div class="cp-wave__layer cp-wave__layer--white"></div>
+          </div>
+        </div>
+        <div class="demo__foot"><code class="demo__code">.cp-wave</code><button class="demo__copy" data-copy='class="cp-wave"'>Copy</button></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- COUNTERS -->
+<section class="section section--mint" id="counters">
+  <div class="container">
+    <div class="lab-section-title" data-reveal="up">
+      <span class="eyebrow"><span class="dot"></span> 05</span>
+      <h2>Counters &amp; progress</h2>
+    </div>
+
+    <div class="lab-grid" data-stagger="60">
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">01</span><div><h3>Count up</h3><p>Eased number roll</p></div></div>
+        <div class="demo__stage">
+          <div class="stat__value" style="color:var(--ng-green-700)" data-count-to="12480" data-count-duration="2000">0</div>
+        </div>
+        <div class="demo__foot"><code class="demo__code">data-count-to="12480"</code><button class="demo__copy" data-copy='data-count-to="12480"'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">02</span><div><h3>Prefix &amp; suffix</h3><p>Decimals, units, separators</p></div></div>
+        <div class="demo__stage">
+          <div style="display:flex;gap:22px;flex-wrap:wrap;justify-content:center">
+            <span class="stat__value" style="color:var(--ng-green-700);font-size:2rem" data-count-to="6.4" data-count-decimals="1" data-count-suffix=" days">0</span>
+            <span class="stat__value" style="color:var(--gold-600);font-size:2rem" data-count-to="88" data-count-suffix="%">0</span>
+          </div>
+        </div>
+        <div class="demo__foot"><code class="demo__code">data-count-suffix="%"</code><button class="demo__copy" data-copy='data-count-to="88" data-count-suffix="%"'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">03</span><div><h3>Progress ring</h3><p>A donut made with conic-gradient</p></div></div>
+        <div class="demo__stage" style="background:var(--ng-green-900)">
+          <div class="cp-ring" style="--p:88">
+            <span class="cp-ring__value" data-count-to="88" data-count-suffix="%">0</span>
+          </div>
+        </div>
+        <div class="demo__foot"><code class="demo__code">.cp-ring --p:88</code><button class="demo__copy" data-copy='class="cp-ring" style="--p:88"'>Copy</button></div>
+      </article>
+
+      <article class="demo" data-reveal="up">
+        <div class="demo__head"><span class="demo__idx">04</span><div><h3>Scroll progress bar</h3><p>The thin bar at the very top</p></div></div>
+        <div class="demo__stage">
+          <div style="width:100%;height:8px;border-radius:8px;background:var(--ng-green-100);overflow:hidden">
+            <div style="height:100%;width:62%;border-radius:8px;background:linear-gradient(90deg,var(--ng-green-600),var(--gold-400))"></div>
+          </div>
+        </div>
+        <div class="demo__foot"><code class="demo__code">data-progress</code><button class="demo__copy" data-copy='data-progress'>Copy</button></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- API -->
+<section class="section" id="api">
+  <div class="container">
+    <div class="lab-section-title" data-reveal="up">
+      <span class="eyebrow"><span class="dot"></span> 06</span>
+      <h2>Attribute reference</h2>
+    </div>
+
+    <div class="card" style="padding:0;overflow:hidden" data-reveal="up">
+      <table class="spec-table">
+        <thead>
+          <tr><th style="width:210px">Attribute / class</th><th>What it does</th><th style="width:130px">Trigger</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>data-reveal="up"</code></td><td>Element fades and rises when it scrolls into view. Also: fade, down, left, right, zoom, zoom-far, blur, blur-up, flip, tilt, grow, rise, sweep.</td><td>Scroll</td></tr>
+          <tr><td><code>data-delay="1..6"</code></td><td>Built-in delay steps of 90ms each.</td><td>Scroll</td></tr>
+          <tr><td><code>data-stagger="120"</code></td><td>Gives each child of the container a 120ms extra delay so they cascade.</td><td>Scroll</td></tr>
+          <tr><td><code>data-split="words|chars"</code></td><td>JavaScript wraps the text in spans so each word or letter can rise on its own.</td><td>Scroll</td></tr>
+          <tr><td><code>data-count-to="12480"</code></td><td>Counts up when it becomes visible. Add <code>data-count-decimals</code>, <code>data-count-prefix</code>, <code>data-count-suffix</code>, <code>data-count-duration</code>.</td><td>Scroll</td></tr>
+          <tr><td><code>data-ripple</code></td><td>A ripple spreads from the exact spot you clicked.</td><td>Click</td></tr>
+          <tr><td><code>data-magnetic="0.35"</code></td><td>The element drifts toward the cursor. 0.35 means it moves about a third of the distance.</td><td>Pointer</td></tr>
+          <tr><td><code>data-tilt="12"</code></td><td>The card rotates in 3D as the pointer moves across it.</td><td>Pointer</td></tr>
+          <tr><td><code>data-glow</code></td><td>A soft light follows the pointer inside the element.</td><td>Pointer</td></tr>
+          <tr><td><code>data-parallax="0.18"</code></td><td>The layer moves slower than the page when you scroll.</td><td>Scroll</td></tr>
+          <tr><td><code>data-scramble="TEXT"</code></td><td>The letters shuffle into place on hover.</td><td>Pointer</td></tr>
+          <tr><td><code>data-typewriter</code></td><td>Types the element's own text out on load. Add <code>data-typewriter-speed</code>.</td><td>On load</td></tr>
+          <tr><td><code>data-progress</code></td><td>Fixed bar at the top that fills as you scroll down.</td><td>Scroll</td></tr>
+          <tr><td><code>data-header</code></td><td>Gives the header its white background once you scroll.</td><td>Scroll</td></tr>
+          <tr><td><code>.cp-aurora</code></td><td>Drifting blurred colour blobs. Give it four child <code>&lt;span&gt;</code>s.</td><td>Ambient</td></tr>
+          <tr><td><code>.cp-gradient-flow</code></td><td>A slow moving green-to-gold gradient surface.</td><td>Ambient</td></tr>
+          <tr><td><code>.cp-grid-overlay</code></td><td>A faded technical grid made from two repeating gradients.</td><td>Ambient</td></tr>
+          <tr><td><code>.cp-grain</code></td><td>Adds a fine dot texture over the section for depth.</td><td>Ambient</td></tr>
+          <tr><td><code>.cp-marquee</code></td><td>An infinite sideways ticker. Set <code>--marquee-speed</code>.</td><td>Ambient</td></tr>
+          <tr><td><code>.cp-wave</code></td><td>The Nigerian flag wave divider.</td><td>Ambient</td></tr>
+          <tr><td><code>.cp-blob</code></td><td>A liquid shape that morphs its border-radius.</td><td>Ambient</td></tr>
+          <tr><td><code>.cp-shimmer-text</code></td><td>A light travelling across the letters.</td><td>Ambient</td></tr>
+          <tr><td><code>.cp-draw-border</code></td><td>A green-to-gold gradient border that always shimmers.</td><td>Ambient</td></tr>
+          <tr><td><code>.cp-ring</code></td><td>The donut progress ring. Set <code>--p</code> to the percentage.</td><td>UI</td></tr>
+          <tr><td><code>.cp-status--*</code></td><td>Animated status pills: new, review, progress, fixed.</td><td>UI</td></tr>
+          <tr><td><code>.ico ico--road</code></td><td>The whole icon set. road, water, bin, lamp, shield, home, pin, clock, check, thumb, search, arrow, menu, pen, users, chart, star, bell, photo, globe.</td><td>UI</td></tr>
+          <tr><td><code>data-nav-toggle</code></td><td>Button that opens and closes the mobile menu. The panel itself needs <code>data-nav-links</code>.</td><td>Click</td></tr>
+          <tr><td><code>&lt;body data-cursor="on"&gt;</code></td><td>Turns on the custom cursor on mouse devices.</td><td>Pointer</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card" style="margin-top:22px;background:var(--ng-green-900);border:0;color:rgba(255,255,255,.75)" data-reveal="up">
+      <h3 style="color:#fff;margin-bottom:10px">Accessibility &amp; performance notes</h3>
+      <ul style="display:grid;gap:10px;font-size:var(--fs-sm)">
+        <li>· <strong style="color:#fff">Reduced motion</strong> — if the visitor has asked for less motion in their device settings, every effect stops.</li>
+        <li>· <strong style="color:#fff">It still works without JavaScript</strong> — the content is only hidden once the script says it can show it again, so nothing gets stuck invisible.</li>
+        <li>· <strong style="color:#fff">Only two <code>scroll</code> listeners</strong> — one for the reveals and one for the numbers, so scrolling stays smooth.</li>
+        <li>· <strong style="color:#fff">Works on phones</strong> — the tilt, magnetic and glow effects are turned off on touch screens so the site stays quick and normal to use.</li>
+        <li>· <strong style="color:#fff">Easy on the computer</strong> — we only animate <code>transform</code> and <code>opacity</code>, which the browser can do without slowing down the page.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer class="footer cp-grain">
+  <div class="container">
+    <div class="footer__bottom" style="margin-top:0;border-top:0;padding-top:0">
+      <p>© 2026 CivicPulse — Animation Lab. Project by <strong style="color:#fff">Pinmo Paul</strong>, Group A.</p>
+      <p>
+        <a href="index.html">← Back to the CivicPulse homepage</a>
+        &nbsp;·&nbsp; <a href="report.html">Report a problem</a>
+        &nbsp;·&nbsp; <a href="track.html">Track a report</a>
+        &nbsp;·&nbsp; <a href="admin.html">Admin dashboard</a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/animations.js"></script>
+<script>
+  /* ---------------- Lab-only helpers ---------------- */
+  (function () {
+    /* Copy the snippet to the clipboard */
+    document.addEventListener("click", function (event) {
+      var button = event.target.closest(".demo__copy");
+      if (!button) { return; }
+
+      var text = button.getAttribute("data-copy") || "";
+      var done = function () {
+        var original = button.textContent;
+        button.textContent = "Copied";
+        setTimeout(function () { button.textContent = original; }, 1500);
+      };
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, done);
+      } else {
+        var box = document.createElement("textarea");
+        box.value = text;
+        document.body.appendChild(box);
+        box.select();
+        try { document.execCommand("copy"); } catch (error) {}
+        document.body.removeChild(box);
+        done();
+      }
+    });
+  })();
+</script>
+</body>
+</html>

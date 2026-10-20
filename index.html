@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CivicPulse — Report &amp; Track Community Problems</title>
+<meta name="description" content="CivicPulse lets residents report bad roads, blocked drainage, poor waste disposal and broken streetlights — and track exactly what is being done about them." />
+<meta name="author" content="Pinmo Paul" />
+<meta name="theme-color" content="#008751" />
+
+<link rel="stylesheet" href="assets/css/base.css" />
+<link rel="stylesheet" href="assets/css/animations.css" />
+<link rel="stylesheet" href="assets/css/app.css" />
+<link rel="stylesheet" href="assets/css/pages.css" />
+<link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAZUlEQVR42u3XSw4AEAxFUVu0KstmAUJKf0+8Jsb3zLSlPDWtdtFLibpgtHEVwip+hbCOHyG84iKEd3yLiIovEX8DouMTggACCCAgHcC/AAKQvpBArGQQSynEWg5xmECcZhDHqfMMh1NRyGzSnHYAAAAASUVORK5CYII=" />
+
+<script>
+  // We hide the page content with css until the animation script is
+  // ready to show it again. If that script does not load, we take the
+  // class off after 3 seconds so the page is never left blank.
+  document.documentElement.classList.add("cp-motion");
+  setTimeout(function () {
+    if (!window.cpReady) {
+      document.documentElement.classList.remove("cp-motion");
+    }
+  }, 3000);
+</script>
+</head>
+
+<body data-cursor="on">
+
+<!-- Scroll progress bar -->
+<div class="cp-progress" data-progress aria-hidden="true"></div>
+
+<!-- HEADER -->
+<header class="header header--over-dark" data-header>
+  <nav class="container nav" aria-label="Main navigation">
+    <a href="#home" class="nav__brand">
+      <span class="nav__mark" aria-hidden="true">
+        <span class="ico ico--home ico--sm"></span>
+      </span>
+      <span class="nav__brand-text">Civic<span>Pulse</span></span>
+    </a>
+
+    <button class="nav__toggle" data-nav-toggle aria-label="Toggle menu" aria-expanded="false">
+      <span class="ico ico--menu"></span>
+    </button>
+
+    <div class="nav__links" id="nav-links" data-nav-links>
+      <a href="#how"        class="nav__link" data-nav-link>How it works</a>
+      <a href="#categories" class="nav__link" data-nav-link>Categories</a>
+      <a href="#reports"    class="nav__link" data-nav-link>Live reports</a>
+      <a href="#impact"     class="nav__link" data-nav-link>Impact</a>
+      <a href="#voices"     class="nav__link" data-nav-link>Community</a>
+      <a href="track.html"  class="nav__link" data-nav-link>Track</a>
+      <a href="report.html" class="btn btn--primary btn--sm nav__cta" data-ripple data-magnetic="0.18">
+        Report a problem
+        <span class="ico ico--arrow ico--sm"></span>
+      </a>
+    </div>
+  </nav>
+</header>
+
+<main>
+
+<!-- HERO -->
+<section class="hero cp-grain" id="home">
+  <div class="hero__bg">
+    <div class="cp-gradient-flow"></div>
+    <div class="cp-aurora" aria-hidden="true">
+      <span></span><span></span><span></span><span></span>
+    </div>
+    <div class="cp-grid-overlay" aria-hidden="true"></div>
+  </div>
+
+  <!-- Floating signal dots (pure CSS animation) -->
+  <div class="signal" aria-hidden="true">
+    <span style="left:8%;top:18%;animation-delay:-1s"></span>
+    <span style="left:22%;top:62%;animation-delay:-2.4s"></span>
+    <span style="left:35%;top:12%;animation-delay:-3.1s"></span>
+    <span style="left:48%;top:78%;animation-delay:-0.6s"></span>
+    <span style="left:58%;top:28%;animation-delay:-4.2s"></span>
+    <span style="left:70%;top:66%;animation-delay:-1.7s"></span>
+    <span style="left:82%;top:22%;animation-delay:-2.9s"></span>
+    <span style="left:92%;top:54%;animation-delay:-3.6s"></span>
+    <span style="left:14%;top:88%;animation-delay:-2.1s"></span>
+    <span style="left:41%;top:44%;animation-delay:-4.8s"></span>
+    <span style="left:66%;top:88%;animation-delay:-0.9s"></span>
+    <span style="left:88%;top:40%;animation-delay:-3.3s"></span>
+  </div>
+
+  <div class="container hero__inner">
+    <div class="hero__copy">
+      <span class="pill pill--glass" data-reveal="fade">
+        <span class="dot cp-live-dot" style="color:#0AA465"></span>
+        1,248 problems reported this month
+      </span>
+
+      <h1>
+        <span data-split="words" data-delay="1">Your street,</span><br />
+        <span data-split="words" data-delay="3" class="cp-shimmer-text">your voice,</span><br />
+        <span data-split="words" data-delay="5">your fix.</span>
+      </h1>
+
+      <p class="hero__lead" data-reveal="up" data-delay="4">
+        CivicPulse gives every resident a direct line to the people who fix
+        things. Report a bad road, a blocked drain, an overflowing bin — then
+        watch it move from <em>reported</em> to <em>resolved</em>.
+      </p>
+
+      <div class="hero__actions" data-reveal="up" data-delay="5">
+        <a href="report.html" class="btn btn--gold btn--lg" data-ripple data-magnetic="0.22">
+          <span class="ico ico--pen ico--sm"></span>
+          Report a problem
+        </a>
+        <a href="#reports" class="btn btn--ghost btn--lg" data-ripple>
+          Browse live reports
+          <span class="ico ico--arrow ico--sm"></span>
+        </a>
+      </div>
+
+      <div class="hero__trust" data-reveal="up" data-delay="6">
+        <div class="hero__avatars" aria-hidden="true">
+          <span>AB</span><span>CE</span><span>FI</span><span>+9</span>
+        </div>
+        <p><strong>2,400+ residents</strong><br />reporting for their neighbourhoods</p>
+      </div>
+    </div>
+
+    <!-- THE COMMUNITY MAP (pure CSS) -->
+    <div class="hero__visual" data-reveal="zoom" data-delay="3">
+      <div class="map" data-parallax="0.04">
+        <div class="map__roads" aria-hidden="true"></div>
+
+        <div class="map__blocks" aria-hidden="true">
+          <span style="left:6%;top:10%;width:14%;height:13%"></span>
+          <span style="left:30%;top:6%;width:22%;height:10%"></span>
+          <span style="left:70%;top:11%;width:20%;height:14%"></span>
+          <span style="left:12%;top:38%;width:15%;height:16%"></span>
+          <span style="left:40%;top:40%;width:17%;height:13%"></span>
+          <span style="left:72%;top:40%;width:19%;height:15%"></span>
+          <span style="left:10%;top:70%;width:18%;height:15%"></span>
+          <span style="left:44%;top:70%;width:14%;height:17%"></span>
+          <span style="left:74%;top:72%;width:17%;height:13%"></span>
+        </div>
+
+        <div class="map__sweep" aria-hidden="true"></div>
+        <div class="map__sweep map__sweep--gold" aria-hidden="true"></div>
+
+        <span class="map__dot" style="--x:16%;--y:22%;animation-delay:.55s" aria-hidden="true"></span>
+        <span class="map__dot" style="--x:82%;--y:30%;animation-delay:.75s" aria-hidden="true"></span>
+        <span class="map__dot" style="--x:28%;--y:80%;animation-delay:.95s" aria-hidden="true"></span>
+        <span class="map__dot" style="--x:70%;--y:78%;animation-delay:1.15s" aria-hidden="true"></span>
+
+        <div class="map__pin" aria-hidden="true"></div>
+
+        <div class="map__chip" style="top:10%;left:34%" data-reveal="left" data-delay="6">
+          <span class="dot cp-live-dot" style="color:#2EC489"></span>
+          <span><b>Market Road</b><small>Drainage · in review</small></span>
+        </div>
+      </div>
+
+      <div class="float-card float-card--a" data-reveal="left" data-delay="7">
+        <div class="float-card__row">
+          <span class="float-card__icon"><span class="ico ico--water ico--sm"></span></span>
+          <span>
+            <strong>Blocked drainage</strong>
+            <small>Market Road · 2h ago</small>
+          </span>
+        </div>
+        <div class="float-card__bar"><i></i></div>
+      </div>
+
+      <div class="float-card float-card--b" data-reveal="right" data-delay="8">
+        <div class="float-card__row">
+          <span class="float-card__icon" style="background:rgba(240,165,0,.26);color:#FFD98A">
+            <span class="ico ico--star ico--sm"></span>
+          </span>
+          <span>
+            <strong>Status: Resolved</strong>
+            <small>Ogun Street · Verified</small>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST STRIP -->
+<div class="strip">
+  <div class="cp-marquee" style="--marquee-speed:38s">
+    <div class="cp-marquee__track">
+      <span class="cp-marquee__item">Warri</span>
+      <span class="cp-marquee__item">Port Harcourt</span>
+      <span class="cp-marquee__item">Benin City</span>
+      <span class="cp-marquee__item">Enugu</span>
+      <span class="cp-marquee__item">Lagos</span>
+      <span class="cp-marquee__item">Ibadan</span>
+      <span class="cp-marquee__item">Kaduna</span>
+      <span class="cp-marquee__item">Makurdi</span>
+      <span class="cp-marquee__item">Warri</span>
+      <span class="cp-marquee__item">Port Harcourt</span>
+      <span class="cp-marquee__item">Benin City</span>
+      <span class="cp-marquee__item">Enugu</span>
+      <span class="cp-marquee__item">Lagos</span>
+      <span class="cp-marquee__item">Ibadan</span>
+      <span class="cp-marquee__item">Kaduna</span>
+      <span class="cp-marquee__item">Makurdi</span>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how">
+  <div class="container">
+    <div class="section-head" data-reveal="up">
+      <span class="eyebrow" data-reveal="fade"><span class="dot"></span> How it works</span>
+      <h2 style="margin-top:14px">Three steps from complaint to <span class="text-gradient">completion</span></h2>
+      <p class="lead">No forms to dig through, no office visits, no endless phone calls. Just a clear report and a public record of what happened next.</p>
+    </div>
+
+    <div class="grid grid--3" data-stagger="140">
+      <article class="card card--hover step" data-reveal="up">
+        <span class="step__num" aria-hidden="true">01</span>
+        <div class="step__icon"><span class="ico ico--pen"></span></div>
+        <h3>Describe the problem</h3>
+        <p>Pick a category, tell us what is wrong and drop a pin on the exact spot. Add a photo if it helps.</p>
+      </article>
+
+      <article class="card card--hover step" data-reveal="up">
+        <span class="step__num" aria-hidden="true">02</span>
+        <div class="step__icon"><span class="ico ico--globe"></span></div>
+        <h3>It reaches the right office</h3>
+        <p>Your report is routed to the department that owns the problem — works, sanitation, or utilities.</p>
+      </article>
+
+      <article class="card card--hover step" data-reveal="up">
+        <span class="step__num" aria-hidden="true">03</span>
+        <div class="step__icon"><span class="ico ico--check"></span></div>
+        <h3>Track it to the end</h3>
+        <p>Watch the status move from <strong>New</strong> to <strong>In Progress</strong> to <strong>Resolved</strong> — and see the official response.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="section section--mint" id="categories">
+  <div class="container">
+    <div class="section-head section-head--center" data-reveal="up">
+      <span class="eyebrow" data-reveal="fade"><span class="dot"></span> What you can report</span>
+      <h2 style="margin-top:14px">Six everyday problems, <span class="text-gradient">one simple platform</span></h2>
+      <p class="lead">Every category is handled by a named department with a public response target.</p>
+    </div>
+
+    <div class="grid grid--3" data-stagger="90">
+      <article class="cat" data-tilt="7" data-reveal="up">
+        <div class="cat__icon"><span class="ico ico--road"></span></div>
+        <h3>Bad roads</h3>
+        <p>Potholes, collapsed edges, unpaved stretches and dangerous road surfaces.</p>
+        <span class="cat__count">412 open</span>
+      </article>
+
+      <article class="cat" data-tilt="7" data-reveal="up">
+        <div class="cat__icon"><span class="ico ico--water"></span></div>
+        <h3>Blocked drainage</h3>
+        <p>Open gutters, flooding, blocked culverts and sewage running into the street.</p>
+        <span class="cat__count">238 open</span>
+      </article>
+
+      <article class="cat" data-tilt="7" data-reveal="up">
+        <div class="cat__icon"><span class="ico ico--bin"></span></div>
+        <h3>Waste disposal</h3>
+        <p>Uncollected refuse, overflowing dumpsites and bins that have never been emptied.</p>
+        <span class="cat__count">301 open</span>
+      </article>
+
+      <article class="cat" data-tilt="7" data-reveal="up">
+        <div class="cat__icon"><span class="ico ico--lamp"></span></div>
+        <h3>Broken streetlights</h3>
+        <p>Dark stretches at night, flickering lamps and posts that have been knocked down.</p>
+        <span class="cat__count">176 open</span>
+      </article>
+
+      <article class="cat" data-tilt="7" data-reveal="up">
+        <div class="cat__icon"><span class="ico ico--shield"></span></div>
+        <h3>Safety &amp; security</h3>
+        <p>Missing railings, unguarded excavations, abandoned buildings and unguarded manholes.</p>
+        <span class="cat__count">94 open</span>
+      </article>
+
+      <article class="cat" data-tilt="7" data-reveal="up">
+        <div class="cat__icon"><span class="ico ico--home"></span></div>
+        <h3>Public facilities</h3>
+        <p>Broken parks, damaged bus shelters, failed water points and unusable toilets.</p>
+        <span class="cat__count">122 open</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE REPORTS -->
+<section class="section" id="reports">
+  <div class="container">
+    <div class="section-head" data-reveal="up">
+      <span class="eyebrow" data-reveal="fade"><span class="dot"></span> Community feed</span>
+      <h2 style="margin-top:14px">Live reports from your <span class="text-gradient">neighbourhood</span></h2>
+      <p class="lead">Search, filter and follow every open issue. Click the vote count to add your support.</p>
+    </div>
+
+    <div class="toolbar" data-reveal="up" data-delay="2">
+      <div class="toolbar__search">
+        <span class="ico ico--search" aria-hidden="true"></span>
+        <input class="input" type="search" id="report-search" placeholder="Search by title, location or ID…" aria-label="Search reports" />
+      </div>
+      <div class="filters" id="report-filters" role="group" aria-label="Filter reports">
+        <button class="filter is-active" data-filter="all">All</button>
+        <button class="filter" data-filter="New">New</button>
+        <button class="filter" data-filter="In Review">In review</button>
+        <button class="filter" data-filter="In Progress">In progress</button>
+        <button class="filter" data-filter="Resolved">Resolved</button>
+      </div>
+    </div>
+
+    <!-- quick tracker -->
+    <div class="track-bar" style="margin-bottom:var(--sp-4)" data-reveal="up" data-delay="3">
+      <span class="ico ico--chart" style="color:var(--ink-400)" aria-hidden="true"></span>
+      <input class="input" type="search" id="quick-track" placeholder="Already reported it? Enter your code, e.g. CP-4821" aria-label="Track a report by reference code" />
+      <a href="track.html" class="btn btn--primary" id="quick-track-link" data-ripple>
+        <span class="ico ico--search ico--sm"></span>
+        Track
+      </a>
+    </div>
+
+    <div class="report-list" id="report-list" data-stagger="70">
+
+      <article class="report" data-status="New" data-category="Drainage" data-reveal="up">
+        <div class="report__icon"><span class="ico ico--water"></span></div>
+        <div>
+          <h3>Drainage blocked, road flooding after every rain</h3>
+          <div class="report__meta">
+            <span><span class="ico ico--pin ico--sm" style="color:var(--ink-300)"></span> Market Road, Warri</span>
+            <span><span class="ico ico--clock ico--sm" style="color:var(--ink-300)"></span> 2 hours ago</span>
+            <span class="report__id">CP-4821</span>
+          </div>
+        </div>
+        <div class="report__side">
+          <span class="cp-status cp-status--new"><i class="cp-status__dot"></i>New</span>
+          <span class="report__votes"><span class="ico ico--thumb ico--sm"></span> 38</span>
+        </div>
+      </article>
+
+      <article class="report" data-status="In Progress" data-category="Roads" data-reveal="up">
+        <div class="report__icon"><span class="ico ico--road"></span></div>
+        <div>
+          <h3>Deep pothole on the link road near the junction</h3>
+          <div class="report__meta">
+            <span><span class="ico ico--pin ico--sm" style="color:var(--ink-300)"></span> Yenagoa Street, Yenagoa</span>
+            <span><span class="ico ico--clock ico--sm" style="color:var(--ink-300)"></span> Yesterday</span>
+            <span class="report__id">CP-4815</span>
+          </div>
+        </div>
+        <div class="report__side">
+          <span class="cp-status cp-status--progress"><i class="cp-status__dot"></i>In progress</span>
+          <span class="report__votes"><span class="ico ico--thumb ico--sm"></span> 122</span>
+        </div>
+      </article>
+
+      <article class="report" data-status="In Review" data-category="Waste" data-reveal="up">
+        <div class="report__icon"><span class="ico ico--bin"></span></div>
+        <div>
+          <h3>Refuse not collected for five days at the bus stop</h3>
+          <div class="report__meta">
+            <span><span class="ico ico--pin ico--sm" style="color:var(--ink-300)"></span> Ogun Street, Sapele</span>
+            <span><span class="ico ico--clock ico--sm" style="color:var(--ink-300)"></span> 3 days ago</span>
+            <span class="report__id">CP-4790</span>
+          </div>
+        </div>
+        <div class="report__side">
+          <span class="cp-status cp-status--review"><i class="cp-status__dot"></i>In review</span>
+          <span class="report__votes"><span class="ico ico--thumb ico--sm"></span> 64</span>
+        </div>
+      </article>
+
+      <article class="report" data-status="Resolved" data-category="Streetlights" data-reveal="up">
+        <div class="report__icon"><span class="ico ico--lamp"></span></div>
+        <div>
+          <h3>All four streetlights on the estate road are dark</h3>
+          <div class="report__meta">
+            <span><span class="ico ico--pin ico--sm" style="color:var(--ink-300)"></span> Estate Road, Asokoro</span>
+            <span><span class="ico ico--clock ico--sm" style="color:var(--ink-300)"></span> 1 week ago</span>
+            <span class="report__id">CP-4702</span>
+          </div>
+        </div>
+        <div class="report__side">
+          <span class="cp-status cp-status--fixed"><i class="cp-status__dot"></i>Resolved</span>
+          <span class="report__votes"><span class="ico ico--thumb ico--sm"></span> 211</span>
+        </div>
+      </article>
+
+      <article class="report" data-status="New" data-category="Safety" data-reveal="up">
+        <div class="report__icon"><span class="ico ico--shield"></span></div>
+        <div>
+          <h3>Open manhole cover on the pedestrian path</h3>
+          <div class="report__meta">
+            <span><span class="ico ico--pin ico--sm" style="color:var(--ink-300)"></span> University Road, Benin</span>
+            <span><span class="ico ico--clock ico--sm" style="color:var(--ink-300)"></span> 4 hours ago</span>
+            <span class="report__id">CP-4823</span>
+          </div>
+        </div>
+        <div class="report__side">
+          <span class="cp-status cp-status--new"><i class="cp-status__dot"></i>New</span>
+          <span class="report__votes"><span class="ico ico--thumb ico--sm"></span> 17</span>
+        </div>
+      </article>
+
+      <article class="report" data-status="In Progress" data-category="Facilities" data-reveal="up">
+        <div class="report__icon"><span class="ico ico--home"></span></div>
+        <div>
+          <h3>Community tap has been dry for two weeks</h3>
+          <div class="report__meta">
+            <span><span class="ico ico--pin ico--sm" style="color:var(--ink-300)"></span> Old GRA, Ibadan</span>
+            <span><span class="ico ico--clock ico--sm" style="color:var(--ink-300)"></span> 2 weeks ago</span>
+            <span class="report__id">CP-4688</span>
+          </div>
+        </div>
+        <div class="report__side">
+          <span class="cp-status cp-status--progress"><i class="cp-status__dot"></i>In progress</span>
+          <span class="report__votes"><span class="ico ico--thumb ico--sm"></span> 89</span>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="empty" id="report-empty" hidden>
+      <p style="font-size:1.1rem;font-weight:600;color:var(--ink-700)">No reports match that search</p>
+      <p style="margin-top:6px">Try a different keyword or clear the filters.</p>
+    </div>
+  </div>
+</section>
+
+<!-- IMPACT -->
+<section class="section section--deep impact" id="impact">
+  <div class="impact__deco cp-aurora" aria-hidden="true">
+    <span></span><span></span><span></span><span></span>
+  </div>
+  <div class="container" style="position:relative;z-index:2">
+    <div class="section-head section-head--center" data-reveal="up">
+      <span class="eyebrow" style="color:var(--ng-green-300)" data-reveal="fade"><span class="dot"></span> Our impact</span>
+      <h2 style="margin-top:14px">Proof that <span class="cp-shimmer-text">showing up works</span></h2>
+      <p class="lead" style="color:rgba(255,255,255,.62)">Live numbers from reports submitted and resolved on CivicPulse.</p>
+    </div>
+
+    <div class="grid grid--4" data-stagger="110">
+      <div class="stat" data-reveal="up">
+        <div class="stat__icon"><span class="ico ico--pen ico--sm"></span></div>
+        <div class="stat__value" data-count-to="12480" data-count-duration="2000">0</div>
+        <div class="stat__label">Reports submitted</div>
+      </div>
+      <div class="stat" data-reveal="up">
+        <div class="stat__icon"><span class="ico ico--check ico--sm"></span></div>
+        <div class="stat__value" data-count-to="9134" data-count-duration="2000">0</div>
+        <div class="stat__label">Problems resolved</div>
+      </div>
+      <div class="stat" data-reveal="up">
+        <div class="stat__icon"><span class="ico ico--clock ico--sm"></span></div>
+        <div class="stat__value" data-count-to="6.4" data-count-decimals="1" data-count-suffix=" days" data-count-duration="2000">0</div>
+        <div class="stat__label">Average resolution time</div>
+      </div>
+      <div class="stat" data-reveal="up">
+        <div class="stat__icon"><span class="ico ico--users ico--sm"></span></div>
+        <div class="stat__value" data-count-to="2406" data-count-duration="2000">0</div>
+        <div class="stat__label">Active residents</div>
+      </div>
+    </div>
+
+    <div class="gauges" style="margin-top:54px" data-stagger="140">
+      <div class="gauge" data-reveal="zoom">
+        <div class="cp-ring" style="--p:88">
+          <span class="cp-ring__value" data-count-to="88" data-count-suffix="%">0</span>
+        </div>
+        <div class="gauge__label">Reports answered</div>
+      </div>
+      <div class="gauge" data-reveal="zoom">
+        <div class="cp-ring" style="--p:73">
+          <span class="cp-ring__value" data-count-to="73" data-count-suffix="%">0</span>
+        </div>
+        <div class="gauge__label">Fixed within 7 days</div>
+      </div>
+      <div class="gauge" data-reveal="zoom">
+        <div class="cp-ring" style="--p:94">
+          <span class="cp-ring__value" data-count-to="94" data-count-suffix="%">0</span>
+        </div>
+        <div class="gauge__label">Residents satisfied</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VOICES -->
+<section class="section" id="voices">
+  <div class="container">
+    <div class="section-head section-head--center" data-reveal="up">
+      <span class="eyebrow" data-reveal="fade"><span class="dot"></span> Community voices</span>
+      <h2 style="margin-top:14px">What residents are saying</h2>
+    </div>
+
+    <div class="grid grid--3" data-stagger="130">
+      <article class="voice" data-reveal="up">
+        <p class="voice__quote">I reported a collapsed drainage on my street in January. By February the culvert was replaced and I could see the photos. First time I felt the government was actually listening.</p>
+        <div class="voice__who">
+          <span class="voice__avatar">NA</span>
+          <span><strong>Ngozi A.</strong><small>Warri, Delta State</small></span>
+        </div>
+      </article>
+
+      <article class="voice" data-reveal="up">
+        <p class="voice__quote">We used to just complain in the group chat. Now there is a public record — my neighbours can see the status change from New to In Progress. That visibility is everything.</p>
+        <div class="voice__who">
+          <span class="voice__avatar">OE</span>
+          <span><strong>Olu E.</strong><small>Enugu</small></span>
+        </div>
+      </article>
+
+      <article class="voice" data-reveal="up">
+        <p class="voice__quote">The updates are honest. Sometimes the answer is “this needs budget approval”, but at least I know where it stands instead of guessing.</p>
+        <div class="voice__who">
+          <span class="voice__avatar">SB</span>
+          <span><strong>Samuel B.</strong><small>Benin City</small></span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section section--tight" id="report">
+  <div class="container">
+    <div class="cta-panel cp-grain" data-reveal="zoom">
+      <div class="cp-aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="cta-panel__blob cp-blob" aria-hidden="true"></div>
+      <h2>See something that needs fixing?</h2>
+      <p style="max-width:52ch;margin:16px auto 0">Take a photo, drop a pin, and let the right department know. It takes less than a minute — and you will get a public response.</p>
+      <div class="hero__actions" style="justify-content:center">
+        <a href="report.html" class="btn btn--gold btn--lg" data-ripple data-magnetic="0.22">
+          <span class="ico ico--pen ico--sm"></span>
+          Report a problem
+        </a>
+        <a href="track.html" class="btn btn--ghost btn--lg" data-ripple>
+          <span class="ico ico--chart ico--sm"></span>
+          Track a report
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer cp-grain">
+  <div class="container">
+    <div class="footer__grid">
+      <div style="max-width:320px">
+        <div class="nav__brand" style="margin-bottom:16px">
+          <span class="nav__mark" aria-hidden="true"><span class="ico ico--home ico--sm"></span></span>
+          <span class="nav__brand-text" style="color:#fff">Civic<span style="color:var(--ng-green-300)">Pulse</span></span>
+        </div>
+        <p style="font-size:var(--fs-sm)">A community problem reporting and tracking platform for Nigerian neighbourhoods. Report it, follow it, see it fixed.</p>
+      </div>
+
+      <div>
+        <h4>Platform</h4>
+        <ul style="display:grid;gap:10px;font-size:var(--fs-sm)">
+          <li><a href="#how">How it works</a></li>
+          <li><a href="#categories">Categories</a></li>
+          <li><a href="#reports">Live reports</a></li>
+          <li><a href="#impact">Impact</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>For residents</h4>
+        <ul style="display:grid;gap:10px;font-size:var(--fs-sm)">
+          <li><a href="report.html">Report a problem</a></li>
+          <li><a href="track.html">Track a report</a></li>
+          <li><a href="#">Community guidelines</a></li>
+          <li><a href="#">Help centre</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>For officials</h4>
+        <ul style="display:grid;gap:10px;font-size:var(--fs-sm)">
+          <li><a href="admin.html">Admin dashboard</a></li>
+          <li><a href="admin.html">Review queue</a></li>
+          <li><a href="#">Service targets</a></li>
+          <li><a href="#">Data export</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <p>© 2026 CivicPulse. Project by <strong style="color:#fff">Pinmo Paul</strong> — Group A, Front End Development Track.</p>
+      <p>Built with HTML, CSS, Flexbox &amp; vanilla JavaScript.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/animations.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
